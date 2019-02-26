@@ -1,0 +1,12 @@
+CREATE TABLE eq
+(
+  id serial NOT NULL,
+  time timestamp,
+  place text,
+  lat float,
+  lon float,
+  deps integer,
+  mag float,
+  shindo text,
+  CONSTRAINT eq_pkey PRIMARY KEY (id)
+)

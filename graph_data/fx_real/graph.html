@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>WebGL sample</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="data.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="/apps/webgl/common/minMatrix.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="/apps/webgl/common/lib.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="/apps/webgl/graph_lib/data_shader.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="/apps/webgl/graph_lib/texture_shader.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="/apps/webgl/graph_lib/script.js" type="text/javascript" charset="UTF-8"></script>
+		<link rel="stylesheet" href="/apps/webgl/graph_lib/graph.css">
+
+<script>
+function init_custom_var() {
+	g_range_x = 0.0005;
+	g_trans_x = -g_data_x_max * g_range_x;
+	g_scale_line_x_split_num = 10;
+//	g_trans_y = 0;
+//	z_scale = 10000;
+}
+</script>
+
+</head>
+<body>
+	<div class="menu"><input type="image" src="/apps/webgl/img/menu-icon.png" width="60px" onclick="change_legend()"/></div>
+	<div class="mode" id="mode">dbclick!</div>
+	<div class="legend" id="legend"></div>
+	<canvas id="canvas"></canvas>
+	<div class="clear"/>
+</body>
+</html>

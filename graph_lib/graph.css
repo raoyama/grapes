@@ -1,0 +1,39 @@
+body {
+	margin: 0px;
+}
+li {
+	font-size: 50px;
+	font-weight: 700; 
+	list-style:none;
+}
+div.menu {
+	position: absolute;
+	z-index: 2;
+	left: 6px;
+	top: 6px;
+}
+div.mode {
+	position: absolute;
+	z-index: 2;
+	left: 76px;
+	top: 6px;
+	width: 150px;
+	background: rgba(0,102,204,0.8);
+	border: 3px solid #999;
+	-webkit-border-radius: 10px;
+	font-size: 36px;
+	font-weight: 700;
+	text-align: center;
+}
+
+div.legend {
+	position: absolute;
+	left: 10px;
+	top: 61px;
+	width: 330px;
+	background: rgba(144,144,144,0.6);
+	border: 3px solid #999;
+	padding: 25px 5px 5px 5px;
+	-webkit-border-radius: 10px;
+	display:none;
+}
