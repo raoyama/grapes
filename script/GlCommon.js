@@ -58,7 +58,7 @@ class GlCommon {
 	}
 
 	// テクスチャを生成する関数
-	static create_texture(source, n){
+	static create_texture(textures, source, n){
 		// イメージオブジェクトの生成
 		var img = new Image();
 		
@@ -87,7 +87,6 @@ class GlCommon {
 		// イメージオブジェクトのソースを指定
 		img.src = source;
 	}
-
 	// VBOを生成
 	static create_vbo(data){
 		var vbo = gl.createBuffer();

@@ -3,7 +3,7 @@
 class ShaderP {
 	constructor(data_pos) {
 
-		// 頂点シェーダー:座標、色、サイズ
+		// 頂点シェーダー:座標
 		let vs = `
 			attribute vec3 position;
 			uniform mat4 mvpMatrix;
@@ -12,7 +12,7 @@ class ShaderP {
 			}
 		`;
 
-		// フラグメントシェーダー:色指定
+		// フラグメントシェーダー
 		let fs = `
 			precision mediump float;
 			void main(void){
