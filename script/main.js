@@ -36,6 +36,7 @@ var vbo_line_pos;
 var vbo_data_pos;
 var vbo_data_cls;
 var vbo_data_size;
+
 var vertex_position = [
 	// Front face
 	-1.0, -1.0,  1.0,
@@ -131,17 +132,8 @@ var baseMatrix = m.identity(m.create());
 onload = function(){
 
 	init_canvas();
-	gl.enable(gl.CULL_FACE);	//カリング有効
 
 	init_gl();
-
-	vbo_textureCoord = create_vbo(textureCoord);
-
-	ibo = create_ibo(index);
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
-
-	//データ
-	init_datas();
 
 	draw_display();
 
@@ -168,12 +160,14 @@ function draw_display() {
 	gl.vertexAttribPointer(loc_texture_textureCoord, 2, gl.FLOAT, false, 0, 0);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
+	//ブロック
 	draw_block(0, 0, 0, 0);
 
-	//データ
-	draw_datas();
+	//点
+	draw_points();
 
-//	draw_block(10, 10, 0, 1);
+	//線
+	draw_lines();
 
 	// コンテキストの再描画
 	gl.flush();
@@ -185,21 +179,22 @@ function draw_display() {
 //******************************************************************************
 function init_gl() {
 
+	gl.enable(gl.CULL_FACE);	//カリング有効
+
 	//位置、色、サイズシェーダー
-	prg_data = make_program_var(shader_pcs_vs, shader_pcs_fs);
-//	prg_data = make_program('data_vs', 'data_fs');
+	prg_data = GlCommon.make_program_var(shader_pcs_vs, shader_pcs_fs);
 	loc_data_position	= gl.getAttribLocation(prg_data, 'position');
 	loc_data_color		= gl.getAttribLocation(prg_data, 'color');
 	loc_data_mvpMatrix	= gl.getUniformLocation(prg_data, 'mvpMatrix');
 	loc_data_pointSize	= gl.getAttribLocation(prg_data, 'pointSize');
 
 	//位置シェーダー
-	prg_lines = make_program_var(shader_p_vs, shader_p_fs);
+	prg_lines = GlCommon.make_program_var(shader_p_vs, shader_p_fs);
 	loc_lines_position = gl.getAttribLocation(prg_lines, 'position');
 	loc_lines_mvpMatrix = gl.getUniformLocation(prg_lines, 'mvpMatrix');
 
 	//テクスチャー シェーダー
-	prg_texture = make_program_var(shader_texture_vs, shader_texture_fs);
+	prg_texture = GlCommon.make_program_var(shader_texture_vs, shader_texture_fs);
 	loc_texture_position		= gl.getAttribLocation(prg_texture, 'position');
 	loc_texture_textureCoord	= gl.getAttribLocation(prg_texture, 'textureCoord');
 	loc_texture_mvpMatrix		= gl.getUniformLocation(prg_texture, 'mvpMatrix');
@@ -209,41 +204,28 @@ function init_gl() {
 	gl.enable(gl.DEPTH_TEST);
 	gl.depthFunc(gl.LEQUAL);
 
-	create_texture('texture/block1.png', 0);
-	create_texture('texture/block2.png', 1);
+	GlCommon.create_texture('texture/block1.png', 0);
+	GlCommon.create_texture('texture/block2.png', 1);
 
-	vbo1 = create_vbo(vertex_position);
+	vbo1 = GlCommon.create_vbo(vertex_position);
 
-	vbo_textureCoord = create_vbo(textureCoord);
+	vbo_textureCoord = GlCommon.create_vbo(textureCoord);
 
-	ibo = create_ibo(index);
+	ibo = GlCommon.create_ibo(index);
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+
+	vbo_line_pos = GlCommon.create_vbo(line_pos);
+	vbo_data_pos = GlCommon.create_vbo(data_pos);
+	vbo_data_cls = GlCommon.create_vbo(data_cls);
+	vbo_data_size = GlCommon.create_vbo(data_size);
 
 }
 
 //******************************************************************************
 //* データ表示処理
 //******************************************************************************
-function init_datas() {
-	vbo_line_pos = create_vbo(line_pos);
-	vbo_data_pos = create_vbo(data_pos);
-	vbo_data_cls = create_vbo(data_cls);
-	vbo_data_size = create_vbo(data_size);
-}
-
-function draw_datas() {
-
-	// --------- ライン描画 --------
-	gl.useProgram(prg_lines);
-	gl.bindBuffer(gl.ARRAY_BUFFER, vbo_line_pos);
-	gl.enableVertexAttribArray(loc_lines_position);
-	gl.vertexAttribPointer(loc_lines_position, 3, gl.FLOAT, false, 0, 0);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-	gl.uniformMatrix4fv(loc_lines_mvpMatrix, false, mvpMatrix);
-	gl.drawArrays(gl.LINES , 0, line_pos.length / 3);
-
-	// --------- 点描画 ---------
+// 点描画 
+function draw_points() {
 	gl.useProgram(prg_data);
 
 	gl.bindBuffer(gl.ARRAY_BUFFER, vbo_data_pos);
@@ -263,9 +245,21 @@ function draw_datas() {
 
 	gl.uniformMatrix4fv(loc_data_mvpMatrix, false, mvpMatrix);
 	gl.drawArrays(gl.POINTS, 0, data_pos.length / 3);
-
-
 }
+
+// ライン描画
+function draw_lines() {
+
+	gl.useProgram(prg_lines);
+	gl.bindBuffer(gl.ARRAY_BUFFER, vbo_line_pos);
+	gl.enableVertexAttribArray(loc_lines_position);
+	gl.vertexAttribPointer(loc_lines_position, 3, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	gl.uniformMatrix4fv(loc_lines_mvpMatrix, false, mvpMatrix);
+	gl.drawArrays(gl.LINES , 0, line_pos.length / 3);
+}
+
 function draw_block(x,y,z, id) {
 	trans_size = 2.0;
 	a = [x,y,z];
