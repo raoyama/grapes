@@ -3,12 +3,12 @@ var gl;
 var c;
 
 var m = new matIV();
-var mMatrix = m.identity(m.create());
+//var mMatrix = m.identity(m.create());
 var vMatrix = m.identity(m.create());
 var pMatrix = m.identity(m.create());
 var vpMatrix = m.identity(m.create());
 var mvpMatrix = m.identity(m.create());
-var tmpMatrix1 = m.identity(m.create());
+//var tmpMatrix1 = m.identity(m.create());
 
 // マウス操作用変数
 var mode = 0;	//0は移動 1は回転

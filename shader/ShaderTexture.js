@@ -121,8 +121,16 @@ class ShaderTexture {
 		this.loc_mvpMatrix		= gl.getUniformLocation(this._prg, 'mvpMatrix');
 		this.loc_texture		= gl.getUniformLocation(this._prg, 'texture');
 
-		GlCommon.create_texture(this._textures, 'texture/block1.png', 0);
-		GlCommon.create_texture(this._textures, 'texture/block2.png', 1);
+		GlCommon.create_texture(this._textures, 'texture/block1.png', 1);
+		GlCommon.create_texture(this._textures, 'texture/block2.png', 2);
+		GlCommon.create_texture(this._textures, 'texture/block3.png', 3);
+		GlCommon.create_texture(this._textures, 'texture/block4.png', 4);
+		GlCommon.create_texture(this._textures, 'texture/block5.png', 5);
+		GlCommon.create_texture(this._textures, 'texture/block6.png', 6);
+		GlCommon.create_texture(this._textures, 'texture/block7.png', 7);
+		GlCommon.create_texture(this._textures, 'texture/block8.png', 8);
+		GlCommon.create_texture(this._textures, 'texture/block9.png', 9);
+
 
 		this._vbo_pos = GlCommon.create_vbo(vertex_position);
 		this._vbo_textureCoord = GlCommon.create_vbo(textureCoord);
@@ -134,6 +142,9 @@ class ShaderTexture {
 	}
 
 	draw(baseMatrix, mvpMatrix, x, y, z, id) {
+
+		//テクスチャが読み込まれるまで何もしない
+		if(this._textures[id] == undefined)return;
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo_pos);
 		gl.enableVertexAttribArray(this.loc_position);
@@ -149,11 +160,12 @@ class ShaderTexture {
 		let a = [x,y,z];
 		let trans = vec_mul([trans_size, trans_size, trans_size], a);
 
-		//移動
+		//テクスチャの粗さ
 		gl.bindTexture(gl.TEXTURE_2D, this._textures[id]);
-	//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+//		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+		//移動
 		gl.useProgram(this._prg);
 		m.translate(baseMatrix, trans, mvpMatrix);
 		gl.uniformMatrix4fv(this.loc_mvpMatrix, false, mvpMatrix);
