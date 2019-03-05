@@ -1,7 +1,7 @@
 'use strict';
 
 class ShaderTexture {
-	constructor(data_pos) {
+	constructor(data) {
 
 		// 頂点シェーダー:座標
 		let vs = `
@@ -113,6 +113,7 @@ class ShaderTexture {
 			0.0, 1.0,
 		];
 
+		this._datas = data;
 
 		//テクスチャー シェーダー
 		this._prg             = GlCommon.make_program_var(vs, fs);
@@ -141,10 +142,7 @@ class ShaderTexture {
 	
 	}
 
-	draw(baseMatrix, mvpMatrix, x, y, z, id) {
-
-		//テクスチャが読み込まれるまで何もしない
-		if(this._textures[id] == undefined)return;
+	draw(baseMatrix, mvpMatrix) {
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo_pos);
 		gl.enableVertexAttribArray(this.loc_position);
@@ -157,19 +155,24 @@ class ShaderTexture {
 		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 		let trans_size = 2.0;
-		let a = [x,y,z];
-		let trans = vec_mul([trans_size, trans_size, trans_size], a);
+		for(let data of this._datas ) {
 
-		//テクスチャの粗さ
-		gl.bindTexture(gl.TEXTURE_2D, this._textures[id]);
-//		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+			//テクスチャが読み込まれるまで何もしない
+//			if(this._textures[data[3]] == undefined)return;
 
-		//移動
-		gl.useProgram(this._prg);
-		m.translate(baseMatrix, trans, mvpMatrix);
-		gl.uniformMatrix4fv(this.loc_mvpMatrix, false, mvpMatrix);
-		gl.drawElements(gl.TRIANGLES, this._index.length, gl.UNSIGNED_SHORT, 0);
+			//テクスチャの粗さ
+			gl.bindTexture(gl.TEXTURE_2D, this._textures[data[3]]);
+//			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+			let a = [data[0], data[1], data[2]];
+			let trans = vec_mul([trans_size, trans_size, trans_size], a);
+
+			//移動
+			gl.useProgram(this._prg);
+			m.translate(baseMatrix, trans, mvpMatrix);
+			gl.uniformMatrix4fv(this.loc_mvpMatrix, false, mvpMatrix);
+			gl.drawElements(gl.TRIANGLES, this._index.length, gl.UNSIGNED_SHORT, 0);
+		}
 	}
 }
