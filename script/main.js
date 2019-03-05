@@ -33,12 +33,14 @@ function init_gl() {
 	shaderP			= new ShaderP(line_pos);
 
 	texture_data = [];
-	for(x = -100; x <= 100; x++) {
-		for(z = -100; z <= 100; z++) {
+	texture_data.push([0, 0, 0, 10]);
+/*
+	for(x = 0; x <= 0; x++) {
+		for(z = 1; z <= 1; z++) {
 			texture_data.push([x, 0, z, 3]);
 		}
 	}
-
+*/
 	shaderTexture	= new ShaderTexture(texture_data);
 
 	gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)

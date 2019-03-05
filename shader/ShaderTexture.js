@@ -27,91 +27,97 @@ class ShaderTexture {
 				gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) * smpColor;
 			}
 		`;
-		let vertex_position = [
-			// Front face
-			-1.0, -1.0,  1.0,
-			1.0, -1.0,  1.0,
-			1.0,  1.0,  1.0,
-			-1.0,  1.0,  1.0,
 
-			// Back face
-			-1.0, -1.0, -1.0,
-			-1.0,  1.0, -1.0,
-			1.0,  1.0, -1.0,
-			1.0, -1.0, -1.0,
-
-			// Top face
-			-1.0,  1.0, -1.0,
-			-1.0,  1.0,  1.0,
-			1.0,  1.0,  1.0,
-			1.0,  1.0, -1.0,
-
-			// Bottom face
-			-1.0, -1.0, -1.0,
-			1.0, -1.0, -1.0,
-			1.0, -1.0,  1.0,
-			-1.0, -1.0,  1.0,
-
-			// Right face
-			1.0, -1.0, -1.0,
-			1.0,  1.0, -1.0,
-			1.0,  1.0,  1.0,
-			1.0, -1.0,  1.0,
-
-			// Left face
-			-1.0, -1.0, -1.0,
-			-1.0, -1.0,  1.0,
-			-1.0,  1.0,  1.0,
-			-1.0,  1.0, -1.0,
+		let ver_pos = [
+			[-1.0, -1.0,   1.0],
+			[1.0 , -1.0,   1.0],
+			[1.0 ,  1.0,   1.0],
+			[-1.0,  1.0,   1.0],
+			[-1.0, -1.0,  -1.0],
+			[1.0 , -1.0,  -1.0],
+			[1.0 ,  1.0,  -1.0],
+			[-1.0,  1.0,  -1.0],
 		];
-		this._textures = [];
+
+		let ver_vbo_pos = [];
+		ver_vbo_pos.push(...ver_pos[0]);
+		ver_vbo_pos.push(...ver_pos[1]);
+		ver_vbo_pos.push(...ver_pos[2]);
+		ver_vbo_pos.push(...ver_pos[3]);
+
+		ver_vbo_pos.push(...ver_pos[4]);
+		ver_vbo_pos.push(...ver_pos[5]);
+		ver_vbo_pos.push(...ver_pos[6]);
+		ver_vbo_pos.push(...ver_pos[7]);
+
+		ver_vbo_pos.push(...ver_pos[4]);
+		ver_vbo_pos.push(...ver_pos[5]);
+		ver_vbo_pos.push(...ver_pos[1]);
+		ver_vbo_pos.push(...ver_pos[0]);
+
+		ver_vbo_pos.push(...ver_pos[7]);
+		ver_vbo_pos.push(...ver_pos[4]);
+		ver_vbo_pos.push(...ver_pos[0]);
+		ver_vbo_pos.push(...ver_pos[3]);
+
+		ver_vbo_pos.push(...ver_pos[6]);
+		ver_vbo_pos.push(...ver_pos[7]);
+		ver_vbo_pos.push(...ver_pos[3]);
+		ver_vbo_pos.push(...ver_pos[2]);
+
+		ver_vbo_pos.push(...ver_pos[5]);
+		ver_vbo_pos.push(...ver_pos[6]);
+		ver_vbo_pos.push(...ver_pos[2]);
+		ver_vbo_pos.push(...ver_pos[1]);
+
+
 		this._index = [
-			0, 1, 2,      0, 2, 3,    // Front face
-			4, 5, 6,      4, 6, 7,    // Back face
-			8, 9, 10,     8, 10, 11,  // Top face
-			12, 13, 14,   12, 14, 15, // Bottom face
-			16, 17, 18,   16, 18, 19, // Right face
-			20, 21, 22,   20, 22, 23  // Left face
+			0,   1,  2,   0,  2,  3,
+			7,   6,  5,   7,  5,  4,
+			8,   9, 10,   8, 10, 11,
+			12, 13, 14,  12, 14, 15,
+			16, 17, 18,  16, 18, 19,
+			20, 21, 22,  20, 22, 23,
 		];
 
 		// テクスチャ座標
-		let textureCoord = [
-			// Front face
-			0.0, 0.0,
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
-
-			// Back face
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
-			0.0, 0.0,
-
-			// Top face
-			0.0, 1.0,
-			0.0, 0.0,
-			1.0, 0.0,
-			1.0, 1.0,
-
-			// Bottom face
-			1.0, 1.0,
-			0.0, 1.0,
-			0.0, 0.0,
-			1.0, 0.0,
-
-			// Right face
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
-			0.0, 0.0,
-
-			// Left face
-			0.0, 0.0,
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
+		let texture_pos = [
+			[0.0, 0.0],
+			[0.0, 1.0],
+			[1.0, 1.0],
+			[1.0, 0.0],
 		];
+
+		let textureCoord = [];
+		textureCoord.push(...texture_pos[1]);
+		textureCoord.push(...texture_pos[2]);
+		textureCoord.push(...texture_pos[3]);
+		textureCoord.push(...texture_pos[0]);
+		
+		textureCoord.push(...texture_pos[0]);
+		textureCoord.push(...texture_pos[3]);
+		textureCoord.push(...texture_pos[2]);
+		textureCoord.push(...texture_pos[1]);
+
+		textureCoord.push(...texture_pos[1]);
+		textureCoord.push(...texture_pos[2]);
+		textureCoord.push(...texture_pos[3]);
+		textureCoord.push(...texture_pos[0]);
+
+		textureCoord.push(...texture_pos[1]);
+		textureCoord.push(...texture_pos[2]);
+		textureCoord.push(...texture_pos[3]);
+		textureCoord.push(...texture_pos[0]);
+
+		textureCoord.push(...texture_pos[1]);
+		textureCoord.push(...texture_pos[2]);
+		textureCoord.push(...texture_pos[3]);
+		textureCoord.push(...texture_pos[0]);
+
+		textureCoord.push(...texture_pos[1]);
+		textureCoord.push(...texture_pos[2]);
+		textureCoord.push(...texture_pos[3]);
+		textureCoord.push(...texture_pos[0]);
 
 		this._datas = data;
 
@@ -122,6 +128,7 @@ class ShaderTexture {
 		this.loc_mvpMatrix		= gl.getUniformLocation(this._prg, 'mvpMatrix');
 		this.loc_texture		= gl.getUniformLocation(this._prg, 'texture');
 
+		this._textures = [];
 		GlCommon.create_texture(this._textures, 'texture/block1.png', 1);
 		GlCommon.create_texture(this._textures, 'texture/block2.png', 2);
 		GlCommon.create_texture(this._textures, 'texture/block3.png', 3);
@@ -131,9 +138,10 @@ class ShaderTexture {
 		GlCommon.create_texture(this._textures, 'texture/block7.png', 7);
 		GlCommon.create_texture(this._textures, 'texture/block8.png', 8);
 		GlCommon.create_texture(this._textures, 'texture/block9.png', 9);
+		GlCommon.create_texture(this._textures, 'texture/block_test.png', 10);
 
 
-		this._vbo_pos = GlCommon.create_vbo(vertex_position);
+		this._vbo_pos = GlCommon.create_vbo(ver_vbo_pos);
 		this._vbo_textureCoord = GlCommon.create_vbo(textureCoord);
 
 		let ibo = GlCommon.create_ibo(this._index);
@@ -158,7 +166,7 @@ class ShaderTexture {
 		for(let data of this._datas ) {
 
 			//テクスチャが読み込まれるまで何もしない
-//			if(this._textures[data[3]] == undefined)return;
+			if(this._textures[data[3]] == undefined)return;
 
 			//テクスチャの粗さ
 			gl.bindTexture(gl.TEXTURE_2D, this._textures[data[3]]);
