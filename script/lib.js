@@ -278,6 +278,7 @@ function vec_add(a1, a2) {
 
 	for (i = 0;i < a1.length / col;i ++) {
 		for (j = 0;j < a2.length ;j ++) {
+			a2[j] = Number(a2[j]);
 			ret.push(a1[i * col + j] + a2[j]);
 		}
 	}

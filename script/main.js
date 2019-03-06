@@ -33,18 +33,29 @@ function init_gl() {
 	shaderP			= new ShaderP(line_pos);
 
 	texture_data = [];
-	texture_data.push([0, 0, 0, 10]);
-	texture_data.push([1, 0, 0, 10]);
-/*
-	for(x = 0; x <= 0; x++) {
-		for(z = 1; z <= 1; z++) {
+//	texture_data.push([0, 0, 0, 0]);
+//	texture_data.push([-1, 0, 0, 0]);
+//	texture_data.push([1, 0, 0, 0]);
+//	texture_data.push([0, -1, 0, 0]);
+//	texture_data.push([0, 1, 0, 0]);
+//	texture_data.push([0, 0, -1, 0]);
+//	texture_data.push([0, 0, 1, 0]);
+
+	for(x = -40; x < 40; x++) {
+		for(z = -50; z < 51; z++) {
 			texture_data.push([x, 0, z, 3]);
 		}
 	}
-*/
+	/*
+	for(x = -2; x <= 2; x++) {
+		for(z = -2; z <= 2; z++) {
+			texture_data.push([x, 0, z, 3]);
+		}
+	}
+	*/
 	shaderTexture	= new ShaderTexture2(texture_data);
 
-	gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)
+//	gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)
 	gl.enable(gl.DEPTH_TEST);	// 深度テストを有効にする(隠されるポリゴンは描画しない)
 	gl.depthFunc(gl.LEQUAL);
 
