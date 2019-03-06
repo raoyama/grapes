@@ -42,7 +42,7 @@ function init_gl() {
 		}
 	}
 */
-	shaderTexture	= new ShaderTexture(texture_data);
+	shaderTexture	= new ShaderTexture2(texture_data);
 
 	gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)
 	gl.enable(gl.DEPTH_TEST);	// 深度テストを有効にする(隠されるポリゴンは描画しない)
