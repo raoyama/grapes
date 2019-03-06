@@ -40,8 +40,8 @@ function init_gl() {
 //	texture_data.push([0, 1, 0, 0]);
 //	texture_data.push([0, 0, -1, 0]);
 //	texture_data.push([0, 0, 1, 0]);
-	for(x = -500; x < 500; x++) {
-		for(z = -500; z < 500; z++) {
+	for(x = -200; x < 200; x++) {
+		for(z = -200; z < 200; z++) {
 			texture_data.push([x, 0, z, 3]);
 		}
 	}
