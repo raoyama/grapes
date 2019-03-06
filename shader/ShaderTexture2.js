@@ -82,16 +82,13 @@ class ShaderTexture2 {
 		//console.log(surface_pos);
 		let index_num = 0;
 
-		let ver_vbo_pos2 = [];
-		let textureCoord2 = [];
-		this._index2 = []
+		let point_list = [];
+		let group_num = 0;
 
 		for(let x in surface_pos) {
 			for(let y in surface_pos[x]) {
 				for(let z in surface_pos[x][y]) {
 					for(let s in surface_pos[x][y][z]) {
-//						if(!surface_pos[x][y][z][s]) continue;
-//						console.log(x,y,z,s);
 						x = String(x);
 						y = String(y);
 						z = String(z);
@@ -99,20 +96,35 @@ class ShaderTexture2 {
 
 						let ret = this.make_surface(x, y, z, index_num, s, surface_pos[x][y][z][s]);
 						index_num = index_num + 1;
-						ver_vbo_pos2.push(...ret['vbo_pos']);
-						textureCoord2.push(...ret['texture']);
-						this._index2.push(...ret['index']);
+
+						if(point_list[group_num] == undefined) {
+							point_list[group_num] = {};
+							point_list[group_num]['pos']		= [];
+							point_list[group_num]['texture']	= [];
+							point_list[group_num]['index']		= [];
+						}
+						point_list[group_num]['pos'].push(...ret['vbo_pos']);
+						point_list[group_num]['texture'].push(...ret['texture']);
+						point_list[group_num]['index'].push(...ret['index']);
+						if(index_num % 10000 == 0){
+							group_num ++;
+							index_num = 0;
+						}
 					}
 				}
 			}
 		}
-		console.log(ver_vbo_pos2.length);
-		console.log(index_num);
+//		console.log(ver_vbo_pos2.length);
+//		console.log(index_num);
 
-		this._vbo_pos = GlCommon.create_vbo(ver_vbo_pos2);
-		this._vbo_textureCoord = GlCommon.create_vbo(textureCoord2);
-		let ibo = GlCommon.create_ibo(this._index2);
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+		this._vbo_list = [];
+		for(let i =0; i <  point_list.length; i ++) {
+			this._vbo_list[i] = {};
+			this._vbo_list[i]['pos']			= GlCommon.create_vbo(point_list[i]['pos']);
+			this._vbo_list[i]['texture']		= GlCommon.create_vbo(point_list[i]['texture']);
+			this._vbo_list[i]['index']			= GlCommon.create_ibo(point_list[i]['index']);
+			this._vbo_list[i]['index_length']	= point_list[i]['index'].length;
+		}
 	}
 
 	make_surface(x, y, z, index_id, surface_id, texture_id) {
@@ -227,35 +239,38 @@ class ShaderTexture2 {
 
 
 	draw(baseMatrix, mvpMatrix) {
+		for(let vbo of this._vbo_list) {
+			gl.bindBuffer(gl.ARRAY_BUFFER, vbo['pos']);
+			gl.enableVertexAttribArray(this.loc_position);
+			gl.vertexAttribPointer(this.loc_position, 3, gl.FLOAT, false, 0, 0);
+			gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-		gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo_pos);
-		gl.enableVertexAttribArray(this.loc_position);
-		gl.vertexAttribPointer(this.loc_position, 3, gl.FLOAT, false, 0, 0);
-		gl.bindBuffer(gl.ARRAY_BUFFER, null);
+			gl.bindBuffer(gl.ARRAY_BUFFER, vbo['texture']);
+			gl.enableVertexAttribArray(this.loc_textureCoord);
+			gl.vertexAttribPointer(this.loc_textureCoord, 2, gl.FLOAT, false, 0, 0);
+			gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-		gl.bindBuffer(gl.ARRAY_BUFFER, this._vbo_textureCoord);
-		gl.enableVertexAttribArray(this.loc_textureCoord);
-		gl.vertexAttribPointer(this.loc_textureCoord, 2, gl.FLOAT, false, 0, 0);
-		gl.bindBuffer(gl.ARRAY_BUFFER, null);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vbo['index']);
+			let trans_size = 2.0;
 
-		let trans_size = 2.0;
+			//テクスチャが読み込まれるまで何もしない
+			if(this._all_texture[0] == undefined)return;
 
-		//テクスチャが読み込まれるまで何もしない
-		if(this._all_texture[0] == undefined)return;
+			//テクスチャの粗さ
+			gl.bindTexture(gl.TEXTURE_2D, this._all_texture[0]);
+	//			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-		//テクスチャの粗さ
-		gl.bindTexture(gl.TEXTURE_2D, this._all_texture[0]);
-//			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	//		let a = [0,0,0];
+	//		let trans = vec_mul([trans_size, trans_size, trans_size], a);
 
-//		let a = [0,0,0];
-//		let trans = vec_mul([trans_size, trans_size, trans_size], a);
+			//移動
+			gl.useProgram(this._prg);
+	//		m.translate(baseMatrix, trans, mvpMatrix);
+			gl.uniformMatrix4fv(this.loc_mvpMatrix, false, mvpMatrix);
+			gl.drawElements(gl.TRIANGLES, vbo['index_length'], gl.UNSIGNED_SHORT, 0);
+		}
 
-		//移動
-		gl.useProgram(this._prg);
-//		m.translate(baseMatrix, trans, mvpMatrix);
-		gl.uniformMatrix4fv(this.loc_mvpMatrix, false, mvpMatrix);
-		gl.drawElements(gl.TRIANGLES, this._index2.length, gl.UNSIGNED_SHORT, 0);
 
 	}
 }

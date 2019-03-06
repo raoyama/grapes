@@ -40,9 +40,8 @@ function init_gl() {
 //	texture_data.push([0, 1, 0, 0]);
 //	texture_data.push([0, 0, -1, 0]);
 //	texture_data.push([0, 0, 1, 0]);
-
-	for(x = -40; x < 40; x++) {
-		for(z = -50; z < 51; z++) {
+	for(x = -500; x < 500; x++) {
+		for(z = -500; z < 500; z++) {
 			texture_data.push([x, 0, z, 3]);
 		}
 	}
@@ -71,11 +70,11 @@ function draw_display() {
 
 	m.copy(mvpMatrix ,baseMatrix);
 
-	shaderTexture.draw(baseMatrix, mvpMatrix);
-
 	shaderPcs.draw(mvpMatrix);
 
 	shaderP.draw(mvpMatrix);
+
+	shaderTexture.draw(baseMatrix, mvpMatrix);
 
 	// コンテキストの再描画
 	gl.flush();
