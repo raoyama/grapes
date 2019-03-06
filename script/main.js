@@ -34,6 +34,7 @@ function init_gl() {
 
 	texture_data = [];
 	texture_data.push([0, 0, 0, 10]);
+	texture_data.push([1, 0, 0, 10]);
 /*
 	for(x = 0; x <= 0; x++) {
 		for(z = 1; z <= 1; z++) {
