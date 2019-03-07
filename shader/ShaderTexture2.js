@@ -59,129 +59,113 @@ class ShaderTexture2 {
 
 		//隠される面を除いたポリゴン作成
 		let block_pos = [];
+		console.log('1:' + performance.now()); 
 		for(let data of this._datas ) {
 			this.array_put(block_pos, data[0], data[1], data[2], data[3]);
 		}
+		console.log('2:' + performance.now()); 
+
+		this.index_num = 0;
+
+		this.point_list = [];
+		this.group_num = 0;
 		let surface_pos = [];
 		for(let x in block_pos) {
 			for(let y in block_pos[x]) {
 				for(let z in block_pos[x][y]) {
-					x = String(x);
-					y = String(y);
-					z = String(z);
-					if(this.array_exists(block_pos, x, y, Number(z) + 1) == false)this.array_put2(surface_pos, x, y, z, 0, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x, y, Number(z) - 1) == false)this.array_put2(surface_pos, x, y, z, 1, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x, Number(y) + 1, z) == false)this.array_put2(surface_pos, x, y, z, 2, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x, Number(y) - 1, z) == false)this.array_put2(surface_pos, x, y, z, 3, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, Number(x) + 1, y, z) == false)this.array_put2(surface_pos, x, y, z, 4, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, Number(x) - 1, y, z) == false)this.array_put2(surface_pos, x, y, z, 5, block_pos[x][y][z]);
-				}
+					x = Number(x);
+					y = Number(y);
+					z = Number(z);
+					if(this.array_exists(block_pos, x, y, z + 1) == false)this.make_surface(x, y, z, 0, block_pos[x][y][z]);
+					if(this.array_exists(block_pos, x, y, z - 1) == false)this.make_surface(x, y, z, 1, block_pos[x][y][z]);
+					if(this.array_exists(block_pos, x, y + 1, z) == false)this.make_surface(x, y, z, 2, block_pos[x][y][z]);
+					if(this.array_exists(block_pos, x, y - 1, z) == false)this.make_surface(x, y, z, 3, block_pos[x][y][z]);
+					if(this.array_exists(block_pos, x + 1, y, z) == false)this.make_surface(x, y, z, 4, block_pos[x][y][z]);
+					if(this.array_exists(block_pos, x - 1, y, z) == false)this.make_surface(x, y, z, 5, block_pos[x][y][z]);
+				}                                                                                
 			}
 		}
-		//console.log(block_pos);
-		//console.log(surface_pos);
-		let index_num = 0;
-
-		let point_list = [];
-		let group_num = 0;
-
-		for(let x in surface_pos) {
-			for(let y in surface_pos[x]) {
-				for(let z in surface_pos[x][y]) {
-					for(let s in surface_pos[x][y][z]) {
-						x = String(x);
-						y = String(y);
-						z = String(z);
-						s = String(s);
-
-						let ret = this.make_surface(x, y, z, index_num, s, surface_pos[x][y][z][s]);
-						index_num = index_num + 1;
-
-						if(point_list[group_num] == undefined) {
-							point_list[group_num] = {};
-							point_list[group_num]['pos']		= [];
-							point_list[group_num]['texture']	= [];
-							point_list[group_num]['index']		= [];
-						}
-						point_list[group_num]['pos'].push(...ret['vbo_pos']);
-						point_list[group_num]['texture'].push(...ret['texture']);
-						point_list[group_num]['index'].push(...ret['index']);
-						if(index_num % 10000 == 0){
-							group_num ++;
-							index_num = 0;
-						}
-					}
-				}
-			}
-		}
-//		console.log(ver_vbo_pos2.length);
-//		console.log(index_num);
+		console.log('3:' + performance.now()); 
 
 		this._vbo_list = [];
-		for(let i =0; i <  point_list.length; i ++) {
+		for(let i =0; i <  this.point_list.length; i ++) {
 			this._vbo_list[i] = {};
-			this._vbo_list[i]['pos']			= GlCommon.create_vbo(point_list[i]['pos']);
-			this._vbo_list[i]['texture']		= GlCommon.create_vbo(point_list[i]['texture']);
-			this._vbo_list[i]['index']			= GlCommon.create_ibo(point_list[i]['index']);
-			this._vbo_list[i]['index_length']	= point_list[i]['index'].length;
+			this._vbo_list[i]['pos']			= GlCommon.create_vbo(this.point_list[i]['pos']);
+			this._vbo_list[i]['texture']		= GlCommon.create_vbo(this.point_list[i]['texture']);
+			this._vbo_list[i]['index']			= GlCommon.create_ibo(this.point_list[i]['index']);
+			this._vbo_list[i]['index_length']	= this.point_list[i]['index'].length;
 		}
+		 this.point_list = null;
 	}
 
-	make_surface(x, y, z, index_id, surface_id, texture_id) {
-		let ret = {};
+	make_surface(x, y, z, surface_id, texture_id) {
 		surface_id = Number(surface_id);
-		ret['vbo_pos']	= [];
-		ret['index']	= [];
-		ret['texture']	= [];
-		x = Number(x) * this._blocksize;
-		y = Number(y) * this._blocksize;
-		z = Number(z) * this._blocksize;
+		x = x * this._blocksize;
+		y = y * this._blocksize;
+		z = z * this._blocksize;
+		let test = [];
 
+
+		if(this.point_list[this.group_num] == undefined) {
+			this.point_list[this.group_num] = {};
+			this.point_list[this.group_num]['pos']		= [];
+			this.point_list[this.group_num]['texture']	= [];
+			this.point_list[this.group_num]['index']	= [];
+		}
 		switch (surface_id) {
 			case 0:
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[0], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[1], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[2], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[3], [x, y, z]));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[0], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[1], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[2], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[3], x, y, z));
 			break;
 			case 1:
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[7], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[6], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[5], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[4], [x, y, z]));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[7], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[6], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[5], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[4], x, y, z));
 			break;
 			case 2:
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[6], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[7], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[3], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[2], [x, y, z]));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[6], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[7], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[3], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[2], x, y, z));
 			break;
 			case 3:
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[4], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[5], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[1], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[0], [x, y, z]));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[4], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[5], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[1], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[0], x, y, z));
 			break;
 			case 4:
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[5], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[6], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[2], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[1], [x, y, z]));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[5], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[6], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[2], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[1], x, y, z));
 			break;
 			case 5:
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[7], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[4], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[0], [x, y, z]));
-				ret['vbo_pos'].push(...vec_add(this._ver_pos[3], [x, y, z]));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[7], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[4], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[0], x, y, z));
+				this.point_list[this.group_num]['pos'].push(...this.vec3_add(this._ver_pos[3], x, y, z));
 			break;
 		}
-		ret['index'].push(...vec_add(this._base_index, [index_id * 4]));
-		ret['texture'].push(...this._texture_pos_list[texture_id][0]);
-		ret['texture'].push(...this._texture_pos_list[texture_id][1]);
-		ret['texture'].push(...this._texture_pos_list[texture_id][2]);
-		ret['texture'].push(...this._texture_pos_list[texture_id][3]);
+		this.point_list[this.group_num]['index'].push(...this.vec6_add(this._base_index, this.index_num * 4));
+//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][0]);
+//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][1]);
+//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][2]);
+//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][3]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][0]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][1]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][2]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][3]);
 
-		return ret;
+		this.index_num = this.index_num + 1;
+
+		if(this.index_num % 10000 == 0){
+			this.group_num ++;
+			this.index_num = 0;
+		}
 	}
 
 	make_texture_pos(split) {
@@ -204,6 +188,32 @@ class ShaderTexture2 {
 
 		return ret_list;
 	}
+	array_push(a1, a2) {
+		for(let i = 0; i < a2.length; i ++) {
+			a1.push(a2[i]);
+		}
+	}
+	vec_add(array, n) {
+		let ret = [];
+		for (let d of array) {
+			ret.push(d + n);
+		}
+		return ret;
+	}
+	vec6_add(array, n) {
+		let ret = [];
+		for(let i = 0; i < 6; i++) {
+			ret[i] = array[i] + n;
+		}
+		return ret;
+	}
+	vec3_add(array, x, y, z) {
+		let ret = [];
+		ret[0] = array[0] + x;
+		ret[1] = array[1] + y;
+		ret[2] = array[2] + z;
+		return ret;
+	}
 	array_exists(array, x, y, z) {
 		x = String(x);
 		y = String(y);
@@ -224,18 +234,6 @@ class ShaderTexture2 {
 		if(array[x][y][z]	== undefined)array[x][y][z]	= [];
 		array[x][y][z] = val;
 	}
-	array_put2(array, x, y, z, s, val) {
-		x = String(x);
-		y = String(y);
-		z = String(z);
-		s = String(s);
-		if(array[x]				== undefined)array[x]			= [];
-		if(array[x][y]			== undefined)array[x][y]		= [];
-		if(array[x][y][z]		== undefined)array[x][y][z]		= [];
-		if(array[x][y][z][s]	== undefined)array[x][y][z][s]	= [];
-		array[x][y][z][s] = val;
-	}
-
 
 
 	draw(baseMatrix, mvpMatrix) {

@@ -16,8 +16,10 @@ var baseMatrix = m.identity(m.create());
 onload = function(){
 
 	init_canvas();
-
+	startTime = performance.now();
 	init_gl();
+	endTime = performance.now();
+	console.log(endTime - startTime); 
 
 	draw_display();
 
@@ -40,9 +42,13 @@ function init_gl() {
 //	texture_data.push([0, 1, 0, 0]);
 //	texture_data.push([0, 0, -1, 0]);
 //	texture_data.push([0, 0, 1, 0]);
-	for(x = -200; x < 200; x++) {
-		for(z = -200; z < 200; z++) {
-			texture_data.push([x, 0, z, 3]);
+	for(x = -400; x < 400; x++) {
+		for(z = -400; z < 400; z++) {
+			if(x % 100 == 0 || z % 100 == 0) {
+				texture_data.push([x, 0, z, 0]);
+			} else {
+				texture_data.push([x, 0, z, 3]);
+			}
 		}
 	}
 	/*
