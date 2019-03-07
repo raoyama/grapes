@@ -69,7 +69,7 @@ class ShaderTexture2 {
 
 		this.point_list = [];
 		this.group_num = 0;
-		let surface_pos = [];
+
 		for(let x in block_pos) {
 			for(let y in block_pos[x]) {
 				for(let z in block_pos[x][y]) {
@@ -99,12 +99,9 @@ class ShaderTexture2 {
 	}
 
 	make_surface(x, y, z, surface_id, texture_id) {
-		surface_id = Number(surface_id);
 		x = x * this._blocksize;
 		y = y * this._blocksize;
 		z = z * this._blocksize;
-		let test = [];
-
 
 		if(this.point_list[this.group_num] == undefined) {
 			this.point_list[this.group_num] = {};
@@ -151,14 +148,7 @@ class ShaderTexture2 {
 			break;
 		}
 		this.point_list[this.group_num]['index'].push(...this.vec6_add(this._base_index, this.index_num * 4));
-//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][0]);
-//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][1]);
-//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][2]);
-//		this.array_push(this.point_list[this.group_num]['texture'], this._texture_pos_list[texture_id][3]);
-		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][0]);
-		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][1]);
-		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][2]);
-		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][3]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id]);
 
 		this.index_num = this.index_num + 1;
 
@@ -187,11 +177,6 @@ class ShaderTexture2 {
 		}
 
 		return ret_list;
-	}
-	array_push(a1, a2) {
-		for(let i = 0; i < a2.length; i ++) {
-			a1.push(a2[i]);
-		}
 	}
 	vec_add(array, n) {
 		let ret = [];
