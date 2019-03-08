@@ -1,7 +1,7 @@
 'use strict';
 
 class ShaderTexture2 {
-	constructor(data) {
+	constructor(data_list) {
 
 		// 頂点シェーダー:座標
 		let vs = `
@@ -38,7 +38,6 @@ class ShaderTexture2 {
 		this._all_texture = [];
 		GlCommon.create_texture(this._all_texture, 'texture/block_all.png', 0);
 
-		this._datas = data;
 		this._ver_pos = [
 			[-1.0, -1.0,   1.0],
 			[1.0 , -1.0,   1.0],
@@ -49,24 +48,24 @@ class ShaderTexture2 {
 			[1.0 ,  1.0,  -1.0],
 			[-1.0,  1.0,  -1.0],
 		];
-
 		this._base_index = [0,   1,  2,   0,  2,  3];
-
 		this._blocksize = 2;
 
 		// テクスチャ座標
 		this._texture_pos_list = this.make_texture_pos(4);	//4分割
 
-		//隠される面を除いたポリゴン作成
-		let block_pos = [];
+		/** 隠される面を除いたポリゴン作成 */
+		//ブロック位置を3次元連想配列に格納
 		console.log('1:' + performance.now()); 
-		for(let data of this._datas ) {
+		let block_pos = {};
+		for(let data of data_list ) {
 			this.array_put(block_pos, data[0], data[1], data[2], data[3]);
 		}
+
+		//ブロックの隣にブロックがなければ面を作成
+		//vboの量に制限があるため、グループに分けて格納していく
 		console.log('2:' + performance.now()); 
-
 		this.index_num = 0;
-
 		this.point_list = [];
 		this.group_num = 0;
 
@@ -85,8 +84,9 @@ class ShaderTexture2 {
 				}                                                                                
 			}
 		}
-		console.log('3:' + performance.now()); 
 
+		//vbo,iboをグループごとに作成
+		console.log('3:' + performance.now()); 
 		this._vbo_list = [];
 		for(let i =0; i <  this.point_list.length; i ++) {
 			this._vbo_list[i] = {};
@@ -148,8 +148,10 @@ class ShaderTexture2 {
 			break;
 		}
 		this.point_list[this.group_num]['index'].push(...this.vec6_add(this._base_index, this.index_num * 4));
-		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id]);
-
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][0]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][1]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][2]);
+		this.point_list[this.group_num]['texture'].push(...this._texture_pos_list[texture_id][3]);
 		this.index_num = this.index_num + 1;
 
 		if(this.index_num % 10000 == 0){
@@ -239,8 +241,8 @@ class ShaderTexture2 {
 			//テクスチャが読み込まれるまで何もしない
 			if(this._all_texture[0] == undefined)return;
 
-			//テクスチャの粗さ
 			gl.bindTexture(gl.TEXTURE_2D, this._all_texture[0]);
+			//テクスチャの粗さ
 	//			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
