@@ -180,13 +180,7 @@ class ShaderTexture2 {
 
 		return ret_list;
 	}
-	vec_add(array, n) {
-		let ret = [];
-		for (let d of array) {
-			ret.push(d + n);
-		}
-		return ret;
-	}
+
 	vec6_add(array, n) {
 		let ret = [];
 		for(let i = 0; i < 6; i++) {
