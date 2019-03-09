@@ -1,7 +1,7 @@
 'use strict';
 
 class ShaderPcs {
-	constructor(data_pos, data_cls, data_size) {
+	constructor(data) {
 
 		// 頂点シェーダー:座標、色、サイズ
 		let vs = `
@@ -33,10 +33,10 @@ class ShaderPcs {
 		this._loc_mvpMatrix	= gl.getUniformLocation(this._prg, 'mvpMatrix');
 		this._loc_pointSize	= gl.getAttribLocation(this._prg, 'pointSize');
 
-    	this._vbo_pos       = GlCommon.create_vbo(data_pos);
-		this._vbo_cls       = GlCommon.create_vbo(data_cls);
-		this._vbo_size      = GlCommon.create_vbo(data_size);
-    	this._data_length   = data_pos.length;
+    	this._vbo_pos       = GlCommon.create_vbo(data['pos']);
+		this._vbo_cls       = GlCommon.create_vbo(data['color']);
+		this._vbo_size      = GlCommon.create_vbo(data['size']);
+    	this._data_length   = data['pos'].length;
     }
 
 	draw(mvpMatrix) {
