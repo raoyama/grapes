@@ -167,7 +167,7 @@ class ShaderTexture {
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
 			let a = [data[0], data[1], data[2]];
-			let trans = vec_mul([trans_size, trans_size, trans_size], a);
+			let trans = this.vec_mul([trans_size, trans_size, trans_size], a);
 
 			//移動
 			gl.useProgram(this._prg);
@@ -176,4 +176,21 @@ class ShaderTexture {
 			gl.drawElements(gl.TRIANGLES, this._index.length, gl.UNSIGNED_SHORT, 0);
 		}
 	}
+
+	//行列掛け算
+	vec_mul(a1, a2) {
+		let ret = new Array();
+		let col = a2.length;
+		if (a1.length % col != 0) {
+			return false;
+		}
+
+		for (let i = 0;i < a1.length / col;i ++) {
+			for (let j = 0;j < a2.length ;j ++) {
+				ret.push(a1[i * col + j] * a2[j]);
+			}
+		}
+		return ret;
+	}
+
 }

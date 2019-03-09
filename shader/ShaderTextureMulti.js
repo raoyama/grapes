@@ -1,6 +1,6 @@
 'use strict';
 
-class ShaderTexture2 {
+class ShaderTextureMulti {
 	constructor(data_list) {
 
 		// 頂点シェーダー:座標

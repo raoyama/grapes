@@ -251,36 +251,3 @@ function debug() {
 	console.log("g_base_z:" + g_base_z);
 }
 
-
-//行列掛け算
-function vec_mul(a1, a2) {
-	var ret = new Array();
-	col = a2.length;
-	if (a1.length % col != 0) {
-		return false;
-	}
-
-	for (i = 0;i < a1.length / col;i ++) {
-		for (j = 0;j < a2.length ;j ++) {
-			ret.push(a1[i * col + j] * a2[j]);
-		}
-	}
-	return ret;
-}
-
-//行列足し算
-function vec_add(a1, a2) {
-	var ret = new Array();
-	col = a2.length;
-	if (a1.length % col != 0) {
-		return false;
-	}
-
-	for (i = 0;i < a1.length / col;i ++) {
-		for (j = 0;j < a2.length ;j ++) {
-			a2[j] = Number(a2[j]);
-			ret.push(a1[i * col + j] + a2[j]);
-		}
-	}
-	return ret;
-}
