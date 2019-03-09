@@ -217,7 +217,7 @@ class ShaderTexture2 {
 	}
 
 
-	draw(baseMatrix, mvpMatrix) {
+	draw(mvpMatrix) {
 		for(let vbo of this._vbo_list) {
 			gl.bindBuffer(gl.ARRAY_BUFFER, vbo['pos']);
 			gl.enableVertexAttribArray(this.loc_position);
@@ -237,15 +237,11 @@ class ShaderTexture2 {
 
 			gl.bindTexture(gl.TEXTURE_2D, this._all_texture[0]);
 			//テクスチャの粗さ
-	//			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+//			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-	//		let a = [0,0,0];
-	//		let trans = vec_mul([trans_size, trans_size, trans_size], a);
 
 			//移動
 			gl.useProgram(this._prg);
-	//		m.translate(baseMatrix, trans, mvpMatrix);
 			gl.uniformMatrix4fv(this.loc_mvpMatrix, false, mvpMatrix);
 			gl.drawElements(gl.TRIANGLES, vbo['index_length'], gl.UNSIGNED_SHORT, 0);
 		}

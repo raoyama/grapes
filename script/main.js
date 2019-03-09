@@ -74,13 +74,11 @@ function draw_display() {
 
 	set_mvp();
 
-	m.copy(mvpMatrix ,baseMatrix);
-
 	shaderPcs.draw(mvpMatrix);
 
 	shaderP.draw(mvpMatrix);
 
-	shaderTexture.draw(baseMatrix, mvpMatrix);
+	shaderTexture.draw(mvpMatrix);
 
 	// コンテキストの再描画
 	gl.flush();
