@@ -24,12 +24,18 @@ class Canvas {
 		// イベントリスナー登録
 		// イベント関数内ではthisの対象が選択されたオブジェクトになり、Canvasクラスのインスタンスではない
 		// そのため各関数に.bind(this)つけて強制する。 ※setTimeoutも同様
-		this.c.addEventListener('mousewheel',		this.wheelHandler.bind(this),	false);
+
+		//PC用
+		document.addEventListener('keydown',			this.keydown.bind(this),		false);
+		document.addEventListener('mousemove',		this.mousemove2.bind(this),		false);
+
+		this.c.addEventListener('mousewheel',		this.mousewheel.bind(this),	false);
 		this.c.addEventListener('mousedown',		this.mousedown.bind(this),		false);
 		this.c.addEventListener('mouseup',			this.mouseup.bind(this),		false);
-		this.c.addEventListener('mousemove',		this.mousemove.bind(this),		false);
+//		this.c.addEventListener('mousemove',		this.mousemove.bind(this),		false);
 		this.c.addEventListener('dblclick',			this.dblclick.bind(this),		false);
 
+		//スマホ用
 		this.c.addEventListener('touchstart',		this.mousedown.bind(this),		false);
 		this.c.addEventListener('touchmove',		this.mousemove.bind(this),		false);
 		this.c.addEventListener('touchend',			this.mouseup.bind(this),		false);
@@ -39,10 +45,38 @@ class Canvas {
 		this.c.addEventListener('gestureend',		this.gestureend.bind(this),		false);
 		this.c.style.cursor = 'all-scroll';
 	}
+	//キー操作
+	keydown(ev) {
+		let step = 1;
+		let jump_step = 10;
+		switch(ev.code) {
+			case 'KeyW':
+				view.camera_x += Math.cos(view.deg_x / 180 * Math.PI);
+				view.camera_z += Math.sin(view.deg_x / 180 * Math.PI);
+				break;
+			case 'KeyD':
+				view.camera_x -= Math.sin(view.deg_x / 180 * Math.PI);
+				view.camera_z += Math.cos(view.deg_x / 180 * Math.PI);
+				break;
+			case 'KeyS':
+				view.camera_x -= Math.cos(view.deg_x / 180 * Math.PI);
+				view.camera_z -= Math.sin(view.deg_x / 180 * Math.PI);
+				break;
+			case 'KeyA':
+				view.camera_x += Math.sin(view.deg_x / 180 * Math.PI);
+				view.camera_z -= Math.cos(view.deg_x / 180 * Math.PI);
+				break;
+			case 'Space':
+				view.camera_y += jump_step;
+				anime_flg = true;
+
+				break;
+		}
+		view.draw_display();
+	}
 	
-	//イベント関数：thisの中身が
 	//マウス操作
-	wheelHandler(ev) {
+	mousewheel(ev) {
 		let del = 0.1;
 		let ds = ((ev.detail || ev.wheelDelta) < 0) ? 1.1 : 0.9;
 		view.z_scale = view.z_scale * ds;
@@ -126,6 +160,24 @@ class Canvas {
 
 	}
 
+	mousemove2(ev) {
+		if(this.drag == 0) return;
+		 //移動量
+		let dx = ev.clientX - this.previous_x;
+		let dy = ev.clientY - this.previous_y;
+
+		view.deg_x += dx * view.deg_scale;
+		view.deg_y += dy * view.deg_scale;
+		if(view.deg_y > 90)view.deg_y = 90;
+		if(view.deg_y < -90)view.deg_y = -90;
+	    this.previous_x = ev.clientX;
+	    this.previous_y = ev.clientY;
+
+		view.draw_display();
+
+	}
+
+	
 	dblclick(ev) {
 	    this.mode += 1;
 	    this.mode = this.mode % 2;

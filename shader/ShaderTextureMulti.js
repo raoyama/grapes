@@ -57,9 +57,9 @@ class ShaderTextureMulti {
 		/** 隠される面を除いたポリゴン作成 */
 		//ブロック位置を3次元連想配列に格納
 		console.log('1:' + performance.now()); 
-		let block_pos = {};
+		this.block_pos = {};
 		for(let data of data_list ) {
-			this.array_put(block_pos, data[0], data[1], data[2], data[3]);
+			this.array_put(this.block_pos, data[0], data[1], data[2], data[3]);
 		}
 
 		//ブロックの隣にブロックがなければ面を作成
@@ -69,18 +69,18 @@ class ShaderTextureMulti {
 		this.point_list = [];
 		this.group_num = 0;
 
-		for(let x in block_pos) {
-			for(let y in block_pos[x]) {
-				for(let z in block_pos[x][y]) {
+		for(let x in this.block_pos) {
+			for(let y in this.block_pos[x]) {
+				for(let z in this.block_pos[x][y]) {
 					x = Number(x);
 					y = Number(y);
 					z = Number(z);
-					if(this.array_exists(block_pos, x, y, z + 1) == false)this.make_surface(x, y, z, 0, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x, y, z - 1) == false)this.make_surface(x, y, z, 1, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x, y + 1, z) == false)this.make_surface(x, y, z, 2, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x, y - 1, z) == false)this.make_surface(x, y, z, 3, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x + 1, y, z) == false)this.make_surface(x, y, z, 4, block_pos[x][y][z]);
-					if(this.array_exists(block_pos, x - 1, y, z) == false)this.make_surface(x, y, z, 5, block_pos[x][y][z]);
+					if(this.block_exists(x, y, z + 1) == false)this.make_surface(x, y, z, 0, this.block_pos[x][y][z]);
+					if(this.block_exists(x, y, z - 1) == false)this.make_surface(x, y, z, 1, this.block_pos[x][y][z]);
+					if(this.block_exists(x, y + 1, z) == false)this.make_surface(x, y, z, 2, this.block_pos[x][y][z]);
+					if(this.block_exists(x, y - 1, z) == false)this.make_surface(x, y, z, 3, this.block_pos[x][y][z]);
+					if(this.block_exists(x + 1, y, z) == false)this.make_surface(x, y, z, 4, this.block_pos[x][y][z]);
+					if(this.block_exists(x - 1, y, z) == false)this.make_surface(x, y, z, 5, this.block_pos[x][y][z]);
 				}                                                                                
 			}
 		}
@@ -203,6 +203,16 @@ class ShaderTextureMulti {
 		if(array[x]			== undefined)return false;
 		if(array[x][y]		== undefined)return false;
 		if(array[x][y][z]	== undefined)return false;
+		return true;
+	}
+	block_exists(x, y, z) {
+		x = String(x);
+		y = String(y);
+		z = String(z);
+//		console.log(x + ':' + y + ':' + z);
+		if(this.block_pos[x]		== undefined)return false;
+		if(this.block_pos[x][y]		== undefined)return false;
+		if(this.block_pos[x][y][z]	== undefined)return false;
 		return true;
 	}
 

@@ -44,20 +44,33 @@ class Data {
 		let ret = [];
 		ret.push([0, 1, 0, 10]);
 		ret.push([0, 2, 0, 10]);
+		ret.push([10, 1, 10, 10]);
+		ret.push([20, 1, 10, 10]);
 		return ret;
 	}
 
 	static getMultiTexture() {
 		let ret = [];
-		for(let x = -40; x < 40; x++) {
+		for(let x = -40; x < 50; x++) {
 			for(let z = -40; z < 40; z++) {
-				if(x % 100 == 0 || z % 100 == 0) {
+				if(x > 40) {
+					ret.push([x, -20, z, 0]);
+				} else if(x > 30) {
+					ret.push([x, -10, z, 0]);
+				} else if(x % 100 == 0 || z % 100 == 0) {
 					ret.push([x, 0, z, 0]);
 				} else {
 					ret.push([x, 0, z, 3]);
 				}
 			}
 		}
+
+		ret.push([10, 1, 10, 1]);
+		ret.push([10, 2, 11, 1]);
+		ret.push([10, 3, 12, 1]);
+		ret.push([10, 4, 13, 1]);
+		ret.push([10, 5, 14, 1]);
+		ret.push([10, 6, 15, 1]);
 		return ret;
 	}
 
