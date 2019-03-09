@@ -3,20 +3,19 @@
 //* 変数定義
 //******************************************************************************
 
+var gl;
 var shaderP;
 var shaderPcs;
 var shaderTexture;
 var shaderTextureMulti;
-
 var baseMatrix = m.identity(m.create());
-
+var can;
 
 //******************************************************************************
 //* 初期化
 //******************************************************************************
 onload = function(){
-
-	init_canvas();
+	can = new Canvas();
 	startTime = performance.now();
 	init_gl();
 	endTime = performance.now();
@@ -42,8 +41,8 @@ function init_gl() {
 	shaderTexture	= new ShaderTexture(texture_data);
 
 	multi_texture_data = [];
-	for(x = -400; x < 400; x++) {
-		for(z = -400; z < 400; z++) {
+	for(x = -40; x < 40; x++) {
+		for(z = -40; z < 40; z++) {
 			if(x % 100 == 0 || z % 100 == 0) {
 				multi_texture_data.push([x, 0, z, 0]);
 			} else {
@@ -63,7 +62,7 @@ function init_gl() {
 //******************************************************************************
 function draw_display() {
 
-	gl_clear();
+	GlCommon.gl_clear();
 
 	set_mvp();
 	m.copy(mvpMatrix ,baseMatrix);	//shaderTexture用
