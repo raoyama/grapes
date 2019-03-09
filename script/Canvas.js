@@ -1,23 +1,4 @@
 'use strict';
-var m = new matIV();
-//var mMatrix = m.identity(m.create());
-//var tmpMatrix1 = m.identity(m.create());
-var mvpMatrix = m.identity(m.create());
-
-// マウス操作用変数
-
-var z_scale = 10.0;
-
-var g_base_x = 0.0;
-var g_base_y = 0.0;
-var g_base_z = 0.0;
-
-var g_trans_x = .0;
-var g_trans_y = 0.0;
-
-var g_rot_scale = 0.005;	//回転量　0.01ぐらいがよい
-var g_rot_x = 0.0;
-var g_rot_y = 0.0;
 
 
 class Canvas {
@@ -62,11 +43,11 @@ class Canvas {
 	//イベント関数：thisの中身が
 	//マウス操作
 	wheelHandler(ev) {
-		var del = 0.1;
-		var ds = ((ev.detail || ev.wheelDelta) < 0) ? 1.1 : 0.9;
-		z_scale = z_scale * ds;
+		let del = 0.1;
+		let ds = ((ev.detail || ev.wheelDelta) < 0) ? 1.1 : 0.9;
+		view.z_scale = view.z_scale * ds;
 
-		draw_display();
+		view.draw_display();
 		ev.preventDefault();
 	}
 
@@ -100,14 +81,14 @@ class Canvas {
 
 	    this.previous_x = ev.clientX;
 	    this.previous_y = ev.clientY;
-	    draw_display();
+	    view.draw_display();
 	}
 
 	mouseup(ev) {
 		if(this.gesture_flg == true) return;
 
 	    this.drag = 0;
-	    draw_display();
+	    view.draw_display();
 	}
 
 	mousemove(ev) {
@@ -121,8 +102,8 @@ class Canvas {
 		}
 
 		 //移動量
-		var dx = ev.clientX - this.previous_x;
-		var dy = ev.clientY - this.previous_y;
+		let dx = ev.clientX - this.previous_x;
+		let dy = ev.clientY - this.previous_y;
 
 		if(this.mode == 0) {
 			/*
@@ -130,18 +111,18 @@ class Canvas {
 			・半径=z_scaleの円を視野角で切り取る
 			・Y方向が基準となり、X方向に適用される。（アスペクト比に関係ない）
 			*/
-			g_trans_x += dx * z_scale / (this.c.height / 2);
-			g_trans_y += -1 * dy * z_scale / (this.c.height / 2);
+			view.trans_x += dx * view.z_scale / (this.c.height / 2);
+			view.trans_y += -1 * dy * view.z_scale / (this.c.height / 2);
 		} else {
 			//回転
-			g_rot_x += dx * g_rot_scale;
-			g_rot_y += dy * g_rot_scale;
+			view.rot_x += dx * view.rot_scale;
+			view.rot_y += dy * view.rot_scale;
 		}
 
 	    this.previous_x = ev.clientX;
 	    this.previous_y = ev.clientY;
 
-		draw_display();
+		view.draw_display();
 
 	}
 
@@ -162,9 +143,9 @@ class Canvas {
 
 	//マルチタッチ対応
 	gesturechange(ev) {
-		var ds = 1 - ((ev.scale - 1) * 0.05);
-		z_scale = z_scale * ds;
-		draw_display();
+		let ds = 1 - ((ev.scale - 1) * 0.05);
+		view.z_scale = view.z_scale * ds;
+		view.draw_display();
 	}
 	gesturestart(ev) {
 		ev.preventDefault();
@@ -177,49 +158,3 @@ class Canvas {
 
 }
 
-//MVPマトリックスを作成する。
-function set_mvp(){
-	let vMatrix = m.identity(m.create());
-	let pMatrix = m.identity(m.create());
-	let vpMatrix = m.identity(m.create());
-
-	/*
-	matIV.lookAt(eye, center, up, dest)
-	eye		> カメラの位置を表すベクトル
-	center	> カメラの注視点を表すベクトル
-	up		> カメラの上方向を表すベクトル
-	dest	> 演算結果を格納する行列
-	*/
-/*
-	m.lookAt(
-	[g_base_x - g_trans_x, g_base_y - g_trans_y, g_base_z + z_scale],
-	[g_base_x - g_trans_x, g_base_y - g_trans_y, -1000],
-	[0, 1, 0], vMatrix);
-*/
-
-	m.lookAt(
-	[g_base_x, g_base_y, g_base_z + z_scale],
-	[g_base_x, g_base_y, -1000],
-	[0, 1, 0], vMatrix);
-
-	/*
-	matIV.perspective(fovy, aspect, near, far, dest)
-	fovy	> 視野角
-	aspect	> スクリーンのアスペクト比
-	near	> ニアクリップ
-	far		> ファークリップ
-	dest	> 演算結果を格納する行列
-	*/
-	m.perspective(90, can.c.width / can.c.height, 0.00001, 10000, pMatrix);
-
-	m.multiply(pMatrix, vMatrix, vpMatrix);
-
-	let mMatrix = m.identity(m.create());
-
-	m.rotate(mMatrix, g_rot_x , [0.0, 1.0, 0.0], mMatrix);
-	m.rotate(mMatrix, g_rot_y , [1.0, 0.0, 0.0], mMatrix);
-	m.translate(mMatrix, [g_trans_x, g_trans_y, 0.0], mMatrix);
-//	m.rotate(mMatrix, Math.PI , [1.0, 0.0, 0.0], mMatrix);
-
-	m.multiply(vpMatrix, mMatrix, mvpMatrix);
-}

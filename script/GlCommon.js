@@ -82,7 +82,7 @@ class GlCommon {
 			// 生成したテクスチャをグローバル変数に代入
 			textures[n] = tex;
 //			console.log('create_texture:' + n);
-			draw_display();
+			view.draw_display();
 
 		};
 		// イメージオブジェクトのソースを指定
