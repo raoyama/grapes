@@ -39,7 +39,8 @@ class ShaderTextureMulti {
 		GlCommon.create_texture(this._all_texture, 'texture/block_all.png', 0);
 
 		this._ver_pos = [
-			[-1.0, -1.0,   1.0],
+/*
+					[-1.0, -1.0,   1.0],
 			[1.0 , -1.0,   1.0],
 			[1.0 ,  1.0,   1.0],
 			[-1.0,  1.0,   1.0],
@@ -47,9 +48,19 @@ class ShaderTextureMulti {
 			[1.0 , -1.0,  -1.0],
 			[1.0 ,  1.0,  -1.0],
 			[-1.0,  1.0,  -1.0],
+*/
+		
+			[-0.5, -0.5,   0.5],
+			[0.5 , -0.5,   0.5],
+			[0.5 ,  0.5,   0.5],
+			[-0.5,  0.5,   0.5],
+			[-0.5, -0.5,  -0.5],
+			[0.5 , -0.5,  -0.5],
+			[0.5 ,  0.5,  -0.5],
+			[-0.5,  0.5,  -0.5],
 		];
 		this._base_index = [0,   1,  2,   0,  2,  3];
-		this._blocksize = 2;
+		this._blocksize = 1;
 
 		// テクスチャ座標
 		this._texture_pos_list = this.make_texture_pos(4);	//4分割

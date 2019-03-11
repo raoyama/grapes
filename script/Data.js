@@ -49,6 +49,13 @@ class Data {
 		return ret;
 	}
 
+	static getTextureBlock() {
+		let ret = [];
+		ret.push([0, 0, 0, 7]);
+		ret.push([0, 1, 0, 7]);
+		return ret;
+	}
+
 	static getMultiTexture() {
 		let ret = [];
 		for(let x = -40; x < 50; x++) {

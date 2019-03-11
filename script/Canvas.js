@@ -47,31 +47,7 @@ class Canvas {
 	}
 	//キー操作
 	keydown(ev) {
-		let step = 1;
-		let jump_step = 10;
-		switch(ev.code) {
-			case 'KeyW':
-				view.camera_x += Math.cos(view.deg_x / 180 * Math.PI);
-				view.camera_z += Math.sin(view.deg_x / 180 * Math.PI);
-				break;
-			case 'KeyD':
-				view.camera_x -= Math.sin(view.deg_x / 180 * Math.PI);
-				view.camera_z += Math.cos(view.deg_x / 180 * Math.PI);
-				break;
-			case 'KeyS':
-				view.camera_x -= Math.cos(view.deg_x / 180 * Math.PI);
-				view.camera_z -= Math.sin(view.deg_x / 180 * Math.PI);
-				break;
-			case 'KeyA':
-				view.camera_x += Math.sin(view.deg_x / 180 * Math.PI);
-				view.camera_z -= Math.cos(view.deg_x / 180 * Math.PI);
-				break;
-			case 'Space':
-				view.camera_y += jump_step;
-				anime_flg = true;
-
-				break;
-		}
+		player.keyevent(ev.code);
 		view.draw_display();
 	}
 	
@@ -166,10 +142,10 @@ class Canvas {
 		let dx = ev.clientX - this.previous_x;
 		let dy = ev.clientY - this.previous_y;
 
-		view.deg_x += dx * view.deg_scale;
-		view.deg_y += dy * view.deg_scale;
-		if(view.deg_y > 90)view.deg_y = 90;
-		if(view.deg_y < -90)view.deg_y = -90;
+		player.view_x += dx * player.view_scale;
+		player.view_y -= dy * player.view_scale;
+		if(player.view_y > 90)player.view_y = 90;
+		if(player.view_y < -90)player.view_y = -90;
 	    this.previous_x = ev.clientX;
 	    this.previous_y = ev.clientY;
 

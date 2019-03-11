@@ -14,25 +14,22 @@ class View {
 		this.trans_y = 0.0;
 		this.trans_z = 0.0;
 
-		this.camera_x = 0.0;
-		this.camera_y = 30.0;
-		this.camera_z = 0.0;
-
 		this.rot_scale = 0.01;	//回転量　0.01ぐらいがよい
 		this.rot_x = 0.0;
 		this.rot_y = 0.0;
 
-		this.deg_scale = 0.5;
-		this.deg_x = 0.0;
-		this.deg_y = 0.0;
+		player.view_scale = 0.5;
+		player.view_x = 0.0;
+		player.view_y = 0.0;
 
 		this.baseMatrix = m.identity(m.create());
 		this.mvpMatrix = m.identity(m.create());
 
 		this.shaderP			= new ShaderP(Data.getP());
 		this.shaderPcs			= new ShaderPcs(Data.getPcs());
-		this.shaderTexture		= new ShaderTexture(Data.getTexture());
+//		this.shaderTexture		= new ShaderTexture(Data.getTexture());
 		this.shaderTextureMulti	= new ShaderTextureMulti(Data.getMultiTexture());
+		this.shaderTextureBlock	= new ShaderTextureBlock(Data.getTextureBlock());
 
 		//gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)
 		gl.enable(gl.DEPTH_TEST);	// 深度テストを有効にする(隠されるポリゴンは描画しない)
@@ -50,7 +47,8 @@ class View {
 		this.shaderPcs.draw(this.mvpMatrix);
 		this.shaderP.draw(this.mvpMatrix);
 		this.shaderTextureMulti.draw(this.mvpMatrix);
-		this.shaderTexture.draw(this.baseMatrix, this.mvpMatrix);
+//		this.shaderTexture.draw(this.baseMatrix, this.mvpMatrix);
+		this.shaderTextureBlock.draw(this.baseMatrix, this.mvpMatrix, [player.pos_x, player.pos_y, player.pos_z]);
 
 		// コンテキストの再描画
 		gl.flush();
@@ -117,16 +115,16 @@ class View {
 		/*
 		console.log('trans_x:' + this.trans_x);
 		console.log('trans_z:' + this.trans_z);
-		console.log('deg_x:' + this.deg_x);
-		console.log('deg_y:' + this.deg_y);
+		console.log('view_x:' + player.view_x);
+		console.log('view_y:' + player.view_y);
 		*/
 		let vMatrix = m.identity(m.create());
 		let pMatrix = m.identity(m.create());
 		let vpMatrix = m.identity(m.create());
-
+		let camera_back = 5;	//プレイヤーからカメラを少し外す
 		m.lookAt(
-			[this.camera_x, this.camera_y, this.camera_z],
-			[Math.cos(this.deg_x / 180 * Math.PI) * 1000, Math.sin(this.deg_y / 180 * Math.PI) * 1000, Math.sin(this.deg_x / 180 * Math.PI) * 1000],
+			[player.pos_x - Math.cos(player.view_x / 180 * Math.PI) * camera_back , player.pos_y + Math.sin(player.view_y / 180 * Math.PI) * camera_back, player.pos_z - Math.sin(player.view_x / 180 * Math.PI) * camera_back],
+			[Math.cos(player.view_x / 180 * Math.PI) * 1000, Math.sin(player.view_y / 180 * Math.PI) * 1000, Math.sin(player.view_x / 180 * Math.PI) * 1000],
 			[0, 1, 0],
 			vMatrix
 		);
