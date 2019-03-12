@@ -226,6 +226,9 @@ class ShaderTextureMulti {
 		if(this.block_pos[x][y][z]	== undefined)return false;
 		return true;
 	}
+	block_exists_array(pos) {
+		return this.block_exists(pos[0], pos[1], pos[2]);
+	}
 
 	array_put(array, x, y, z, val) {
 		x = String(x);
