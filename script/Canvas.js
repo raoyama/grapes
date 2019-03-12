@@ -11,7 +11,9 @@ class Canvas {
 		this.previous_x = 0;
 		this.previous_y = 0;
 		this.gesture_flg = false;
+		this.timer;
 
+		this.key_state = {};
 		// canvasエレメントを取得
 		this.c = document.getElementById('canvas');
 
@@ -26,10 +28,12 @@ class Canvas {
 		// そのため各関数に.bind(this)つけて強制する。 ※setTimeoutも同様
 
 		//PC用
-		document.addEventListener('keydown',			this.keydown.bind(this),		false);
+		document.addEventListener('keydown',		this.keydown.bind(this),		false);
+		document.addEventListener('keyup',			this.keyup.bind(this),			false);
+		window.addEventListener('blur',				this.blur.bind(this),			false);
 		document.addEventListener('mousemove',		this.mousemove2.bind(this),		false);
 
-		this.c.addEventListener('mousewheel',		this.mousewheel.bind(this),	false);
+		this.c.addEventListener('mousewheel',		this.mousewheel.bind(this),		false);
 		this.c.addEventListener('mousedown',		this.mousedown.bind(this),		false);
 		this.c.addEventListener('mouseup',			this.mouseup.bind(this),		false);
 //		this.c.addEventListener('mousemove',		this.mousemove.bind(this),		false);
@@ -47,10 +51,25 @@ class Canvas {
 	}
 	//キー操作
 	keydown(ev) {
-		player.keyevent(ev.code);
-		view.draw_display();
+		this.key_state[ev.code] = true;
+		if(this.timer == undefined) {
+			this.timer = setInterval(this.keyloop.bind(this), 66);
+		}
 	}
-	
+	keyup(ev) {
+		delete this.key_state[ev.code];
+		if(Object.keys(this.key_state).length == 0) {
+			clearInterval(this.timer);
+			this.timer = undefined;
+		}
+	}
+	keyloop() {
+		player.keyevent();
+	}
+	blur() {
+		this.key_state = {};
+	}
+
 	//マウス操作
 	mousewheel(ev) {
 		let del = 0.1;
@@ -160,10 +179,10 @@ class Canvas {
 
 		let e = document.getElementById('mode');
 		if(this.mode == 0) {
-			e.innerHTML = 'translate';
+//			e.innerHTML = 'translate';
 			this.c.style.cursor = 'all-scroll';
 		} else {
-			e.innerHTML = 'rotate';
+//			e.innerHTML = 'rotate';
 			this.c.style.cursor = 'nw-resize';
 		}
 
