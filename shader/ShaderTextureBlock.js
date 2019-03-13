@@ -77,40 +77,40 @@ class ShaderTextureBlock {
 		// テクスチャ座標
 		let textureCoord = [
 			// Front face
-			0.0, 0.0,
+			0.5, 0.0,
 			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
+			1.0, 0.5,
+			0.5, 0.5,
 
 			// Back face
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
+			0.5, 0.0,
+			0.5, 0.5,
+			0.0, 0.5,
 			0.0, 0.0,
 
 			// Top face
-			0.0, 1.0,
+			0.0, 0.5,
 			0.0, 0.0,
-			1.0, 0.0,
-			1.0, 1.0,
+			0.5, 0.0,
+			0.5, 0.5,
 
 			// Bottom face
-			1.0, 1.0,
-			0.0, 1.0,
+			0.5, 0.5,
+			0.0, 0.5,
 			0.0, 0.0,
-			1.0, 0.0,
+			0.5, 0.0,
 
 			// Right face
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
+			0.5, 0.0,
+			0.5, 0.5,
+			0.0, 0.5,
 			0.0, 0.0,
 
 			// Left face
 			0.0, 0.0,
-			1.0, 0.0,
-			1.0, 1.0,
-			0.0, 1.0,
+			0.5, 0.0,
+			0.5, 0.5,
+			0.0, 0.5,
 		];
 
 		this._datas = data;
@@ -132,6 +132,8 @@ class ShaderTextureBlock {
 		GlCommon.create_texture(this._textures, 'texture/block8.png', 8);
 		GlCommon.create_texture(this._textures, 'texture/block9.png', 9);
 		GlCommon.create_texture(this._textures, 'texture/block_test.png', 10);
+		GlCommon.create_texture(this._textures, 'texture/block15.png', 15);
+		GlCommon.create_texture(this._textures, 'texture/block16.png', 16);
 
 
 		this._vbo_pos = GlCommon.create_vbo(vertex_position);

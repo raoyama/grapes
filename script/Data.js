@@ -51,8 +51,8 @@ class Data {
 
 	static getTextureBlock() {
 		let ret = [];
-		ret.push([0, 0, 0, 7]);
-		ret.push([0, 1, 0, 7]);
+		ret.push([0, 0, 0, 15]);
+		ret.push([0, 1, 0, 16]);
 		return ret;
 	}
 

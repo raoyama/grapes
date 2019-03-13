@@ -16,7 +16,7 @@ class Player {
 
 		this.step		= 0.5;
 		this.speed		= 1;
-		this.jump_step	= 0.2;
+		this.jump_step	= 0.3;
 		this.flying_flg = false;
 	}
 
