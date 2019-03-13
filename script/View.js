@@ -121,10 +121,11 @@ class View {
 		let vMatrix = m.identity(m.create());
 		let pMatrix = m.identity(m.create());
 		let vpMatrix = m.identity(m.create());
-		let camera_back = 5;	//プレイヤーからカメラを少し外す
+		let camera_back = 4;	//プレイヤーからカメラを少し外す
 		m.lookAt(
-			[player.pos_x - Math.cos(player.view_x / 180 * Math.PI) * camera_back , player.pos_y + Math.sin(player.view_y / 180 * Math.PI) * camera_back, player.pos_z - Math.sin(player.view_x / 180 * Math.PI) * camera_back],
-			[Math.cos(player.view_x / 180 * Math.PI) * 1000, Math.sin(player.view_y / 180 * Math.PI) * 1000, Math.sin(player.view_x / 180 * Math.PI) * 1000],
+//			[player.pos_x - Math.cos(rad(player.view_x)) * camera_back , player.pos_y + Math.sin(rad(player.view_y)) * camera_back + 3, player.pos_z - Math.sin(rad(player.view_x)) * camera_back],
+			[player.pos_x - Math.cos(rad(player.view_x)) * camera_back , player.pos_y + 3, player.pos_z - Math.sin(rad(player.view_x)) * camera_back],
+			[Math.cos(rad(player.view_x)) * 1000, Math.sin(rad(player.view_y)) * 1000, Math.sin(rad(player.view_x)) * 1000],
 			[0, 1, 0],
 			vMatrix
 		);

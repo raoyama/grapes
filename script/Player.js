@@ -42,6 +42,7 @@ class Player {
 		if(this.v_y >= 1)this.v_y = 0.5;
 		if(this.v_y <= -1)this.v_y = -0.5;
 		
+		//あたり判定処理
 		console.log('before a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
 
 		//各軸移動後の8角計算
@@ -143,7 +144,6 @@ class Player {
 		log('pos_z', this.pos_z);
 
 		log('flying_flg', this.flying_flg);
-		log('key', JSON.stringify(canvas.key_state));
 		console.log('after a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
 		view.draw_display();
 	}
@@ -162,21 +162,21 @@ class Player {
 
 	keyevent() {
 		if(canvas.key_state['KeyW']) {
-			this.v_x += Math.cos(this.view_x / 180 * Math.PI) * this.step;
-			this.v_z += Math.sin(this.view_x / 180 * Math.PI) * this.step;
+			this.v_x += Math.cos(rad(this.view_x)) * this.step;
+			this.v_z += Math.sin(rad(this.view_x)) * this.step;
 		}
 
 		if(canvas.key_state['KeyD']) {
-			this.v_x -= Math.sin(this.view_x / 180 * Math.PI) * this.step;
-			this.v_z += Math.cos(this.view_x / 180 * Math.PI) * this.step;
+			this.v_x -= Math.sin(rad(this.view_x)) * this.step;
+			this.v_z += Math.cos(rad(this.view_x)) * this.step;
 		}
 		if(canvas.key_state['KeyS']) {
-			this.v_x -= Math.cos(this.view_x / 180 * Math.PI) * this.step;
-			this.v_z -= Math.sin(this.view_x / 180 * Math.PI) * this.step;
+			this.v_x -= Math.cos(rad(this.view_x)) * this.step;
+			this.v_z -= Math.sin(rad(this.view_x)) * this.step;
 		}
 		if(canvas.key_state['KeyA']) {
-			this.v_x += Math.sin(this.view_x / 180 * Math.PI) * this.step;
-			this.v_z -= Math.cos(this.view_x / 180 * Math.PI) * this.step;
+			this.v_x += Math.sin(rad(this.view_x)) * this.step;
+			this.v_z -= Math.cos(rad(this.view_x)) * this.step;
 		}
 		if(canvas.key_state['Space']) {
 			if(this.flying_flg == false) {
@@ -184,8 +184,5 @@ class Player {
 				this.a_y += this.jump_step;
 			}
 		}
-		//https://teratail.com/questions/38689 同時押し
 	}
 }
-console.log(Math.floor(0.99));
-console.log(Math.floor(-0.99));

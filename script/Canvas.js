@@ -52,12 +52,15 @@ class Canvas {
 	//キー操作
 	keydown(ev) {
 		this.key_state[ev.code] = true;
+		log('key', JSON.stringify(canvas.key_state));
+
 		if(this.timer == undefined) {
 			this.timer = setInterval(this.keyloop.bind(this), 66);
 		}
 	}
 	keyup(ev) {
 		delete this.key_state[ev.code];
+		log('key', JSON.stringify(canvas.key_state));
 		if(Object.keys(this.key_state).length == 0) {
 			clearInterval(this.timer);
 			this.timer = undefined;

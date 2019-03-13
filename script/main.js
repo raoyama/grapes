@@ -38,6 +38,9 @@ function animloop(){
 function round(msg, n) {
 	return  Math.floor(msg * Math.pow(10,n)) / Math.pow(10, n);
 }
+function rad(deg) {
+	return deg / 180 * Math.PI;
+}
 
 //log共通関数
 function comlog(table_id, target, msg) {
