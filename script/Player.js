@@ -27,6 +27,7 @@ class Player {
 		if(this.v_y >= 1)this.v_y = 0.5;
 		if(this.v_y <= -1)this.v_y = -0.5;
 		
+		console.log('before a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
 		//異動後の8角
 		let rad = 0.499;
 		let moved_pos = [this.pos_x  + this.v_x, this.pos_y  + this.v_y, this.pos_z  + this.v_z];
@@ -39,56 +40,86 @@ class Player {
 		corner_pos[5] = [moved_pos[0] - rad, moved_pos[1] - rad, moved_pos[2] + rad];
 		corner_pos[6] = [moved_pos[0] - rad, moved_pos[1] - rad, moved_pos[2] - rad];
 		corner_pos[7] = [moved_pos[0] + rad, moved_pos[1] - rad, moved_pos[2] - rad];
+
+		//正面
 		if(this.v_x > 0) {
 			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[0])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[4])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[3])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[7])) == true) {
 				this.v_x = 0;
+				this.pos_x = this.get_block(corner_pos[0])[0] - 1;
+				console.log('正面');
+				log('block_1', JSON.stringify(this.get_block(corner_pos[0])));
+				log('block_2', JSON.stringify(this.get_block(corner_pos[4])));
 			}
-		} else {
+		}
+		//後ろ
+		else if(this.v_x < 0) {
 			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[1])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[5])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[2])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[6])) == true) {
 				this.v_x = 0;
+				this.pos_x = this.get_block(corner_pos[1])[0] + 1;
+				console.log('後ろ');
 			}
 		}
+		//右
 		if(this.v_z > 0) {
 			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[0])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[1])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[5])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[4])) == true) {
 				this.v_z = 0;
+				this.pos_z = this.get_block(corner_pos[0])[2] - 1;
+				console.log('右');
 			}
-		} else {
+		}
+		//左
+		else if(this.v_z < 0) {
 			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[3])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[2])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[6])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[7])) == true) {
 				this.v_z = 0;
+				this.pos_z = this.get_block(corner_pos[3])[2] + 1;
+				console.log('左');
 			}
 		}
 
+		//上
 		if(this.v_y > 0) {
 			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[0])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[1])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[2])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[3])) == true) {
-				console.log('ぶつけたー');
 				this.a_y = 0;
 				this.v_y = 0;
+				console.log('上');
 				this.flying_flg = true;
 			}
-		} else {
+		}
+		//下
+		else if(this.v_y < 0) {
 			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[4])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[5])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[6])) == true
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[7])) == true) {
-				console.log('落ちたー');
 				this.a_y = 0;
 				this.v_y = 0;
+				console.log('下');
 				this.flying_flg = false;
+			} else {
+				this.flying_flg = true;
+			}
+		}
+		//落下
+		else if(this.v_y == 0) {
+			if(view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[4])) == true
+			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[5])) == true
+			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[6])) == true
+			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos[7])) == true) {
 			} else {
 				this.flying_flg = true;
 			}
@@ -110,9 +141,10 @@ class Player {
 		log('pos_x', this.pos_x);
 		log('pos_y', this.pos_y);
 		log('pos_z', this.pos_z);
+
 		log('flying_flg', this.flying_flg);
 		log('key', JSON.stringify(canvas.key_state));
-		console.log('a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
+		console.log('after a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
 		view.draw_display();
 	}
 

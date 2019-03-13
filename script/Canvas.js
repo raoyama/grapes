@@ -163,11 +163,13 @@ class Canvas {
 
 		player.view_x += dx * player.view_scale;
 		player.view_y -= dy * player.view_scale;
+		player.view_x = player.view_x % 360;
 		if(player.view_y > 90)player.view_y = 90;
 		if(player.view_y < -90)player.view_y = -90;
 	    this.previous_x = ev.clientX;
 	    this.previous_y = ev.clientY;
-
+		log('view_x', player.view_x);
+		log('view_y', player.view_y);
 		view.draw_display();
 
 	}
