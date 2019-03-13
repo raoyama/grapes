@@ -14,8 +14,9 @@ class Player {
 		this.view_x	= 0.0;
 		this.view_y	= 0.0;
 
-		this.step		 = 0.5;
-		this.jump_step	 = 0.2;
+		this.step		= 0.5;
+		this.speed		= 1;
+		this.jump_step	= 0.2;
 		this.flying_flg = false;
 	}
 
@@ -42,8 +43,8 @@ class Player {
 		if(this.v_y >= 1)this.v_y = 0.5;
 		if(this.v_y <= -1)this.v_y = -0.5;
 		
-		//あたり判定処理
-		console.log('before a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
+		/** あたり判定処理 */
+		//console.log('before a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
 
 		//各軸移動後の8角計算
 		let corner_pos_x = this.get_corner([this.pos_x + this.v_x, this.pos_y, this.pos_z]);
@@ -126,9 +127,9 @@ class Player {
 		}
 
 
-		this.pos_x += this.v_x;
+		this.pos_x += this.v_x * this.speed;
 		this.pos_y += this.v_y;
-		this.pos_z += this.v_z;
+		this.pos_z += this.v_z * this.speed;
 
 		this.v_x = 0;
 		this.v_z = 0;
@@ -144,7 +145,7 @@ class Player {
 		log('pos_z', this.pos_z);
 
 		log('flying_flg', this.flying_flg);
-		console.log('after a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
+		//console.log('after a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
 		view.draw_display();
 	}
 

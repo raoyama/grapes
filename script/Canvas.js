@@ -8,6 +8,7 @@ class Canvas {
 		this.mode = 0;	//0は移動 1は回転
 		this.drag = 0;
 		this.didFirstClick = 0;
+		this.didKeyDown = 0;
 		this.previous_x = 0;
 		this.previous_y = 0;
 		this.gesture_flg = false;
@@ -51,14 +52,33 @@ class Canvas {
 	}
 	//キー操作
 	keydown(ev) {
+		console.log('keydown');
 		this.key_state[ev.code] = true;
 		log('key', JSON.stringify(canvas.key_state));
 
+		//連続キー対応 キーが離された後連続で同じキーが押されたら
+		if(this.didKeyDown == 1) {
+			if(this.last_keyup == ev.code) {
+				player.speed = 2;
+			}
+			this.didKeyDown = 0 ;
+		}
 		if(this.timer == undefined) {
 			this.timer = setInterval(this.keyloop.bind(this), 66);
 		}
 	}
 	keyup(ev) {
+
+		player.speed = 1;
+		//連続キー対応 キーが離された後連続で同じキーが押されたら
+		if(this.didKeyDown == 0) {
+			this.last_keyup = ev.code;
+			this.didKeyDown = 1;
+			setTimeout( function() {
+				this.didKeyDown = 0 ;
+			}.bind(this), 100 ) ;
+		}
+		console.log('keyup');
 		delete this.key_state[ev.code];
 		log('key', JSON.stringify(canvas.key_state));
 		if(Object.keys(this.key_state).length == 0) {

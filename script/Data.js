@@ -58,8 +58,8 @@ class Data {
 
 	static getMultiTexture() {
 		let ret = [];
-		for(let x = -40; x < 50; x++) {
-			for(let z = -40; z < 40; z++) {
+		for(let x = -100; x < 100; x++) {
+			for(let z = -100; z < 100; z++) {
 				if(x > 40) {
 					ret.push([x, -20, z, 0]);
 				} else if(x > 30) {
