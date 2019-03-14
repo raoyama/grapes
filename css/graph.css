@@ -2,17 +2,6 @@ body {
 	margin: 0px;
 }
 
-div.legend {
-	position: absolute;
-	left: 10px;
-	top: 61px;
-	width: 330px;
-	background: rgba(144,144,144,0.6);
-	border: 3px solid #999;
-	padding: 25px 5px 5px 5px;
-	-webkit-border-radius: 10px;
-	display:none;
-}
 .logbox{
 	position: absolute;
 	top: 15px;
@@ -21,4 +10,19 @@ div.legend {
 	padding: 5px;
 	color: rgba(0,0,0,1);
 	border:#00ff00 solid 1px;
+}
+.ctrl_btn{
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	margin: 1px;
+	padding: 3px 10px;
+	border-radius: 75px;
+	text-decoration: none;
+	color: #FFF;
+//	background-image: -webkit-linear-gradient(45deg, #FF7107 0%, #ff2b5f 100%);
+//	background-image: linear-gradient(45deg, #FF7107 0%, #ff2b5f 100%);
+//	transition: .4s;
+	background-color: rgba(33, 39, 98, 0.5);
+//	opacity:0.7;
 }

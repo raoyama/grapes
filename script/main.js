@@ -11,6 +11,7 @@ var m = new matIV();
 
 onload = function(){
 	startTime = performance.now();
+	element = new Element();
 	player = new Player();
 	canvas = new Canvas();
 	view = new View();
