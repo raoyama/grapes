@@ -1,6 +1,7 @@
 var gl;
 var view;
 var canvas;
+var evt;
 var player;
 var m = new matIV();
 
@@ -11,6 +12,7 @@ var m = new matIV();
 
 onload = function(){
 	startTime = performance.now();
+	evt = new Event();
 	element = new Element();
 	player = new Player();
 	canvas = new Canvas();

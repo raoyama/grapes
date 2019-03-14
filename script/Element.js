@@ -11,6 +11,7 @@ class Element {
 			this.add_button(1);
 			this.add_button(2);
 			this.add_button(3);
+			this.add_button(4);
 		}else{
 		}
 	}
@@ -38,34 +39,31 @@ class Element {
 			//↑
 			btn.style.top	= '850px';
 			btn.style.left	= '150px';
-			//btn.onclick = this.touchstart2();
 			break;
 		case 1:
 			//→
 			btn.style.top	= '970px';
 			btn.style.left	= '270px';
-			btn.onclick = new Function("alert('ok');");
 			break;
 		case 2:
-			//←
-			btn.style.top	= '970px';
-			btn.style.left	= '30px';
-			btn.onclick = new Function("alert('ok');");
-			break;
-		case 3:
 			//↓
 			btn.style.top	= '1090px';
 			btn.style.left	= '150px';
-			btn.onclick = new Function("alert('ok');");
+			break;
+		case 3:
+			//←
+			btn.style.top	= '970px';
+			btn.style.left	= '30px';
+			break;
+		case 4:
+			//space
+			btn.style.top	= '1200px';
+			btn.style.left	= '400px';
 			break;
 		}
+		btn.addEventListener('touchstart',	function(event){return evt.buttonstart(event, num);},		false);
+		btn.addEventListener('touchend',	function(event){return evt.buttonend(event, num);},		false);
 	}
-	/*
-	touchstart2(ev) {
-		ev.preventDefault();
-		ev = ev.targetTouches[0];
-		this.mousedown(ev);
-	}
-	*/
+
 }
 

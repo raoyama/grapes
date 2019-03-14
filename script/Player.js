@@ -162,24 +162,24 @@ class Player {
 	}
 
 	keyevent() {
-		if(canvas.key_state['KeyW']) {
+		if(evt.key_state['KeyW']) {
 			this.v_x += Math.cos(rad(this.view_x)) * this.step;
 			this.v_z += Math.sin(rad(this.view_x)) * this.step;
 		}
 
-		if(canvas.key_state['KeyD']) {
+		if(evt.key_state['KeyD']) {
 			this.v_x -= Math.sin(rad(this.view_x)) * this.step;
 			this.v_z += Math.cos(rad(this.view_x)) * this.step;
 		}
-		if(canvas.key_state['KeyS']) {
+		if(evt.key_state['KeyS']) {
 			this.v_x -= Math.cos(rad(this.view_x)) * this.step;
 			this.v_z -= Math.sin(rad(this.view_x)) * this.step;
 		}
-		if(canvas.key_state['KeyA']) {
+		if(evt.key_state['KeyA']) {
 			this.v_x += Math.sin(rad(this.view_x)) * this.step;
 			this.v_z -= Math.cos(rad(this.view_x)) * this.step;
 		}
-		if(canvas.key_state['Space']) {
+		if(evt.key_state['Space']) {
 			if(this.flying_flg == false) {
 				this.flying_flg = true;
 				this.a_y += this.jump_step;

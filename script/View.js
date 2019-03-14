@@ -40,8 +40,6 @@ class View {
 	draw_display() {
 		GlCommon.gl_clear();
 		log('player.speed', player.speed);
-		log('canvas.last_keyup', canvas.last_keyup);
-		log('canvas.didKeyDown', canvas.didKeyDown);
 
 		//this.set_mvp();
 		this.set_mvp2();
