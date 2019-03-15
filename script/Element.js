@@ -3,9 +3,10 @@
 class Element {
 
 	constructor() {
-		console.log(navigator.userAgent);
 		this.add_canvas();
 		this.add_logbox();
+
+		//スマホ用ボタン表示
 		if(navigator.userAgent.match(/(iPhone|iPod|Android.*Mobile)/i)){
 			this.add_button(0);
 			this.add_button(1);
@@ -34,30 +35,40 @@ class Element {
 		let btn  = document.createElement('button');
 		btn.className	= 'ctrl_btn';
 		document.body.appendChild(btn);
+
+		// canvasエレメントを取得
+		let lc = document.getElementById('canvas');
+		let width = window.innerWidth;
+		let height = window.innerHeight;
+		let key_span = 120;
+		let key_center_x = 150;
+		let key_center_y = 430;
+
+		
 		switch (num) {
 		case 0:
 			//↑
-			btn.style.top	= '850px';
-			btn.style.left	= '150px';
+			btn.style.top	= height - (key_center_y + key_span) + 'px';
+			btn.style.left	= key_center_x + 'px';
 			break;
 		case 1:
 			//→
-			btn.style.top	= '970px';
-			btn.style.left	= '270px';
+			btn.style.top	= height - key_center_y + 'px';
+			btn.style.left	= key_center_x + key_span + 'px';
 			break;
 		case 2:
 			//↓
-			btn.style.top	= '1090px';
-			btn.style.left	= '150px';
+			btn.style.top	= height - (key_center_y - key_span) + 'px';
+			btn.style.left	= key_center_x + 'px';
 			break;
 		case 3:
 			//←
-			btn.style.top	= '970px';
-			btn.style.left	= '30px';
+			btn.style.top	= height - key_center_y + 'px';
+			btn.style.left	= key_center_x - key_span + 'px';
 			break;
 		case 4:
 			//space
-			btn.style.top	= '1200px';
+			btn.style.top	= height - 200 + 'px';
 			btn.style.left	= '400px';
 			break;
 		}

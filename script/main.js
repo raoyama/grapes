@@ -4,6 +4,8 @@ var canvas;
 var evt;
 var player;
 var m = new matIV();
+var stats = new Stats();
+
 
 //******************************************************************************
 //* 初期化
@@ -11,6 +13,9 @@ var m = new matIV();
 
 
 onload = function(){
+	stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+	document.body.appendChild( stats.dom );
+	
 	startTime = performance.now();
 	evt = new Event();
 	element = new Element();
@@ -28,9 +33,11 @@ onload = function(){
 };
 
 function animloop(){
+	stats.begin();
 	if(player.moving() == true) {
 		player.move();
 	}
+	stats.end();
 	window.requestAnimationFrame(animloop);
 }
 
@@ -41,8 +48,9 @@ function animloop(){
 function round(msg, n) {
 	return  Math.floor(msg * Math.pow(10,n)) / Math.pow(10, n);
 }
+var PI_180 = Math.PI / 180;
 function rad(deg) {
-	return deg / 180 * Math.PI;
+	return deg * PI_180;
 }
 
 //log共通関数
@@ -88,5 +96,6 @@ function comlog(table_id, target, msg) {
 }
 //全体log
 function log(target, msg) {
+	return;//log off 
 	comlog('log_table', target, msg);
 }

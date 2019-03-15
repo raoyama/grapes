@@ -5,14 +5,17 @@ class Player {
 		this.pos_x	= 0.0;
 		this.pos_y	= 30.0;
 		this.pos_z	= 0.0;
-		this.a_x	= 0.0;
 		this.a_y	= 0.0;
-		this.a_z	= 0.0;
 		this.v_x	= 0.0;
 		this.v_y	= 0.0;
 		this.v_z	= 0.0;
-		this.view_x	= 0.0;
-		this.view_y	= 0.0;
+		this.dir_x	= 0.0;
+		this.dir_y	= 0.0;
+		
+		this.cos_dir_x		= 1.0;
+		this.cos_dir_y		= 1.0;
+		this.sin_dir_x		= 0.0;
+		this.sin_dir_y		= 0.0;
 
 		this.step		= 0.5;
 		this.speed		= 1;
@@ -59,7 +62,7 @@ class Player {
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos_x[7])) == true) {
 				this.v_x = 0;
 				this.pos_x = this.get_block(corner_pos_x[0])[0] - 1;
-				console.log('前');
+//				console.log('前');
 			}
 		}
 		//後ろ
@@ -71,7 +74,7 @@ class Player {
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos_x[6])) == true) {
 				this.v_x = 0;
 				this.pos_x = this.get_block(corner_pos_x[1])[0] + 1;
-				console.log('後');
+//				console.log('後');
 			}
 		}
 		//右
@@ -82,7 +85,7 @@ class Player {
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos_z[4])) == true) {
 				this.v_z = 0;
 				this.pos_z = this.get_block(corner_pos_z[0])[2] - 1;
-				console.log('右');
+//				console.log('右');
 			}
 		}
 		//左
@@ -93,7 +96,7 @@ class Player {
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos_z[7])) == true) {
 				this.v_z = 0;
 				this.pos_z = this.get_block(corner_pos_z[3])[2] + 1;
-				console.log('左');
+//				console.log('左');
 			}
 		}
 
@@ -106,7 +109,7 @@ class Player {
 				this.a_y = 0;
 				this.v_y = 0;
 //				this.pos_y = this.get_block(corner_pos_y[0])[1] - 1;
-				console.log('上');
+//				console.log('上');
 				this.flying_flg = true;
 			}
 		}
@@ -118,7 +121,7 @@ class Player {
 			|| view.shaderTextureMulti.block_exists_array(this.get_block(corner_pos_y[7])) == true) {
 				this.a_y = 0;
 				this.v_y = 0;
-				console.log('下');
+//				console.log('下');
 				this.pos_y = this.get_block(corner_pos_y[4])[1] + 1;
 				this.flying_flg = false;
 			} else {
@@ -126,17 +129,11 @@ class Player {
 			}
 		}
 
-
 		this.pos_x += this.v_x * this.speed;
 		this.pos_y += this.v_y;
 		this.pos_z += this.v_z * this.speed;
 
-		this.v_x = 0;
-		this.v_z = 0;
-
-		log('a_x', this.a_x);
 		log('a_y', this.a_y);
-		log('a_z', this.a_z);
 		log('v_x', this.v_x);
 		log('v_y', this.v_y);
 		log('v_z', this.v_z);
@@ -146,6 +143,10 @@ class Player {
 
 		log('flying_flg', this.flying_flg);
 		//console.log('after a:',round(this.a_x,2), round(this.a_y,2), round(this.a_z,2),'v:',round(this.v_x,2), round(this.v_y,2), round(this.v_z,2),'pos:',round(this.pos_x,2), round(this.pos_y,2), round(this.pos_z,2));
+
+		this.v_x = 0;
+		this.v_z = 0;
+
 		view.draw_display();
 	}
 
@@ -153,6 +154,25 @@ class Player {
 		if(this.v_x != 0 || this.v_y != 0 || this.v_z != 0 || this.a_y != 0 || this.flying_flg == true) return true;
 		return false;
 	}
+	add_dir_x(val) {
+		this.dir_x += val;
+		this.dir_x = this.dir_x % 360;
+		let rad_x = rad(this.dir_x);
+		this.cos_dir_x	= Math.cos(rad_x);
+		this.sin_dir_x	= Math.sin(rad_x);
+		log('dir_x', player.dir_x);
+
+	}
+	add_dir_y(val) {
+		this.dir_y += val;
+		if(this.dir_y > 90)this.dir_y = 90;
+		if(this.dir_y < -90)this.dir_y = -90;
+		let rad_y = rad(this.dir_y);
+		this.cos_dir_y	= Math.cos(rad_y);
+		this.sin_dir_y	= Math.sin(rad_y);
+		log('dir_y', player.dir_y);
+	}
+
 	get_block(pos) {
 		let ret = [0];
 		ret[0] = Math.round(pos[0]);
@@ -163,21 +183,21 @@ class Player {
 
 	keyevent() {
 		if(evt.key_state['KeyW']) {
-			this.v_x += Math.cos(rad(this.view_x)) * this.step;
-			this.v_z += Math.sin(rad(this.view_x)) * this.step;
+			this.v_x += this.cos_dir_x * this.step;
+			this.v_z += this.sin_dir_x * this.step;
 		}
 
 		if(evt.key_state['KeyD']) {
-			this.v_x -= Math.sin(rad(this.view_x)) * this.step;
-			this.v_z += Math.cos(rad(this.view_x)) * this.step;
+			this.v_x -= this.sin_dir_x * this.step;
+			this.v_z += this.cos_dir_x * this.step;
 		}
 		if(evt.key_state['KeyS']) {
-			this.v_x -= Math.cos(rad(this.view_x)) * this.step;
-			this.v_z -= Math.sin(rad(this.view_x)) * this.step;
+			this.v_x -= this.cos_dir_x * this.step;
+			this.v_z -= this.sin_dir_x * this.step;
 		}
 		if(evt.key_state['KeyA']) {
-			this.v_x += Math.sin(rad(this.view_x)) * this.step;
-			this.v_z -= Math.cos(rad(this.view_x)) * this.step;
+			this.v_x += this.sin_dir_x * this.step;
+			this.v_z -= this.cos_dir_x * this.step;
 		}
 		if(evt.key_state['Space']) {
 			if(this.flying_flg == false) {

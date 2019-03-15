@@ -18,12 +18,15 @@ class View {
 		this.rot_x = 0.0;
 		this.rot_y = 0.0;
 
-		player.view_scale = 0.5;
-		player.view_x = 0.0;
-		player.view_y = 0.0;
+		this.aspect = canvas.c.width / canvas.c.height;
 
 		this.baseMatrix = m.identity(m.create());
+		this.mMatrix = m.identity(m.create());
+		this.vMatrix = m.identity(m.create());
+		this.pMatrix = m.identity(m.create());
+		this.vpMatrix = m.identity(m.create());
 		this.mvpMatrix = m.identity(m.create());
+		this.camera_back = 4;	//プレイヤーからカメラを少し外す
 
 		this.shaderP			= new ShaderP(Data.getP());
 		this.shaderPcs			= new ShaderPcs(Data.getPcs());
@@ -31,7 +34,7 @@ class View {
 		this.shaderTextureMulti	= new ShaderTextureMulti(Data.getMultiTexture());
 		this.shaderTextureBlock	= new ShaderTextureBlock(Data.getTextureBlock());
 
-		//gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)
+		gl.enable(gl.CULL_FACE);	// カリング有効(ポリゴンの裏側の描画処理を行わない)
 		gl.enable(gl.DEPTH_TEST);	// 深度テストを有効にする(隠されるポリゴンは描画しない)
 		gl.depthFunc(gl.LEQUAL);
 
@@ -45,8 +48,8 @@ class View {
 		this.set_mvp2();
 		m.copy(this.mvpMatrix ,this.baseMatrix);	//shaderTexture用
 
-		this.shaderPcs.draw(this.mvpMatrix);
-		this.shaderP.draw(this.mvpMatrix);
+//		this.shaderPcs.draw(this.mvpMatrix);
+//		this.shaderP.draw(this.mvpMatrix);
 		this.shaderTextureMulti.draw(this.mvpMatrix);
 //		this.shaderTexture.draw(this.baseMatrix, this.mvpMatrix);
 		this.shaderTextureBlock.draw(this.baseMatrix, this.mvpMatrix, [player.pos_x, player.pos_y, player.pos_z]);
@@ -113,39 +116,20 @@ class View {
 	
 	//Minecraftチック
 	set_mvp2(){
-		/*
-		console.log('trans_x:' + this.trans_x);
-		console.log('trans_z:' + this.trans_z);
-		console.log('view_x:' + player.view_x);
-		console.log('view_y:' + player.view_y);
-		*/
-		let vMatrix = m.identity(m.create());
-		let pMatrix = m.identity(m.create());
-		let vpMatrix = m.identity(m.create());
-		let camera_back = 4;	//プレイヤーからカメラを少し外す
 		m.lookAt(
-//			[player.pos_x - Math.cos(rad(player.view_x)) * camera_back , player.pos_y + Math.sin(rad(player.view_y)) * camera_back + 3, player.pos_z - Math.sin(rad(player.view_x)) * camera_back],
-			[player.pos_x - Math.cos(rad(player.view_x)) * camera_back , player.pos_y + 3, player.pos_z - Math.sin(rad(player.view_x)) * camera_back],
-			[Math.cos(rad(player.view_x)) * 1000, Math.sin(rad(player.view_y)) * 1000, Math.sin(rad(player.view_x)) * 1000],
+			[player.pos_x - player.cos_dir_x * this.camera_back , player.pos_y + 3, player.pos_z - player.sin_dir_x * this.camera_back],
+			[player.cos_dir_x * 1000, player.sin_dir_y * 1000, player.sin_dir_x * 1000],
 			[0, 1, 0],
-			vMatrix
+			this.vMatrix
 		);
 		m.perspective(
 			90,
-			canvas.c.width / canvas.c.height,
+			this.aspect,
 			0.00001,
 			10000,
-			pMatrix
+			this.pMatrix
 		);
 
-		m.multiply(pMatrix, vMatrix, vpMatrix);
-
-		let mMatrix = m.identity(m.create());
-
-//		m.rotate(mMatrix, this.rot_x , [0.0, 1.0, 0.0], mMatrix);
-//		m.rotate(mMatrix, this.rot_y , [1.0, 0.0, 0.0], mMatrix);
-//		m.translate(mMatrix, [this.trans_x, this.trans_y, 0.0], mMatrix);
-
-		m.multiply(vpMatrix, mMatrix, this.mvpMatrix);
+		m.multiply(this.pMatrix, this.vMatrix, this.mvpMatrix);
 	}
 }

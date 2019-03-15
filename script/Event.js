@@ -13,13 +13,13 @@ class Event {
 		this.gesture_flg = false;
 		this.timer;
 		this.last_keyup = '';
+		this.dir_scale = 0.5;
 
 		this.key_state = {};
 
 	}
 	//キー操作
 	keydown(ev) {
-		console.log('keydown');
 		this.key_state[ev.code] = true;
 		log('key', JSON.stringify(this.key_state));
 
@@ -46,7 +46,6 @@ class Event {
 				this.didKeyDown = 0 ;
 			}.bind(this), 100 ) ;
 		}
-		console.log('keyup');
 		delete this.key_state[ev.code];
 		log('key', JSON.stringify(this.key_state));
 		if(Object.keys(this.key_state).length == 0) {
@@ -85,15 +84,11 @@ class Event {
 		let dx = ev.clientX - this.previous_x;
 		let dy = ev.clientY - this.previous_y;
 
-		player.view_x += dx * player.view_scale;
-		player.view_y -= dy * player.view_scale;
-		player.view_x = player.view_x % 360;
-		if(player.view_y > 90)player.view_y = 90;
-		if(player.view_y < -90)player.view_y = -90;
-	    this.previous_x = ev.clientX;
+		player.add_dir_x(dx * this.dir_scale);
+		player.add_dir_y(dy * this.dir_scale * -1);
+
+		this.previous_x = ev.clientX;
 	    this.previous_y = ev.clientY;
-		log('view_x', player.view_x);
-		log('view_y', player.view_y);
 		view.draw_display();
 	}
 
