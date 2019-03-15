@@ -89,7 +89,7 @@ class Data {
 		}
 		
 		
-		Data.makeGrape(ret, 70, 50, 0);
+		Data.makeGrape(ret, 70, 49, 0);
 		return ret;
 	}
 
@@ -124,8 +124,8 @@ class Data {
 	}
 	static makeGrape(ret, x, y, z) {
 		let rad = 20;
-		let rad2 = Math.sqrt(2) * rad;
-		let rad_s = Math.sqrt(rad);
+		let rad2 = Math.round(Math.sqrt(2) * rad);
+		let rad_s = Math.round(Math.sqrt(rad));
 		let len = 7;
 		for(let i = 0;i < 7; i ++) {
 			if(i % 2 == 0) {

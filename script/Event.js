@@ -26,7 +26,11 @@ class Event {
 		//連続キー対応 キーが離された後連続で同じキーが押されたら
 		if(this.didKeyDown == 1) {
 			if(this.last_keyup == ev.code) {
-				player.speed = 2;
+				if(ev.code == 'Space') {
+					player.a_y = 8;
+				} else {
+					player.speed = 2;
+				}
 			}
 			this.didKeyDown = 0 ;
 		}
