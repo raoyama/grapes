@@ -36,7 +36,7 @@ class ShaderTextureMulti {
 		this.loc_texture		= gl.getUniformLocation(this._prg, 'texture');
 
 		this._all_texture = [];
-		GlCommon.create_texture(this._all_texture, 'texture/block_all.png', 0);
+		GlCommon.create_texture(this._all_texture, 'texture/block_all2.png', 0);
 
 		this._ver_pos = [
 /*
@@ -58,12 +58,13 @@ class ShaderTextureMulti {
 			[0.5 , -0.5,  -0.5],
 			[0.5 ,  0.5,  -0.5],
 			[-0.5,  0.5,  -0.5],
+
 		];
 		this._base_index = [0,   1,  2,   0,  2,  3];
 		this._blocksize = 1;
 
 		// テクスチャ座標
-		this._texture_pos_list = this.make_texture_pos(4);	//4分割
+		this._texture_pos_list = this.make_texture_pos(16);	//4分割
 
 		/** 隠される面を除いたポリゴン作成 */
 		//ブロック位置を3次元連想配列に格納
@@ -175,20 +176,22 @@ class ShaderTextureMulti {
 		let num = Math.sqrt(split);	//1辺の数
 		let base = 1 / num;
 		let ret_list = [];
+		let s = 0.01;	//テクスチャとテクスチャの隙間
+		let rad = base / 2 - s;
 		for(let i = 0; i < num; i ++) {
 			for(let j = 0; j < num; j ++) {
 				let tmp = [];
-				let tmp_base_i = base * i;
-				let tmp_base_j = base * j;
+				let tmp_base_i = base * i + base / 2;
+				let tmp_base_j = base * j + base / 2;
 				//console.log(tmp_base_i, tmp_base_j);
-				tmp.push([tmp_base_i, tmp_base_j + base]);
-				tmp.push([tmp_base_i + base, tmp_base_j + base]);
-				tmp.push([tmp_base_i + base, tmp_base_j]);
-				tmp.push([tmp_base_i, tmp_base_j]);
-				ret_list.push(tmp);
+				tmp.push([tmp_base_i - rad, tmp_base_j + rad]);			//左上
+				tmp.push([tmp_base_i + rad, tmp_base_j + rad]);	//右上
+				tmp.push([tmp_base_i + rad, tmp_base_j - rad]);			//右下
+				tmp.push([tmp_base_i - rad, tmp_base_j - rad]);					//左下
+				ret_list.push(tmp);	
 			}
 		}
-
+		//console.log(ret_list);
 		return ret_list;
 	}
 
@@ -263,6 +266,13 @@ class ShaderTextureMulti {
 			//テクスチャの粗さ
 //			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+		//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+		//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
+		//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+		//	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
 			//移動
 			gl.useProgram(this._prg);
