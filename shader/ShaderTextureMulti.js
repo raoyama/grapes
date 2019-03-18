@@ -36,7 +36,7 @@ class ShaderTextureMulti {
 		this.loc_texture		= gl.getUniformLocation(this._prg, 'texture');
 
 		this._all_texture = [];
-		GlCommon.create_texture(this._all_texture, 'texture/block_all2.png', 0);
+		GlCommon.create_texture(this._all_texture, 'texture/block17.png', 0);
 
 		this._ver_pos = [
 /*
@@ -64,7 +64,7 @@ class ShaderTextureMulti {
 		this._blocksize = 1;
 
 		// テクスチャ座標
-		this._texture_pos_list = this.make_texture_pos(16);	//4分割
+		this._texture_pos_list = this.make_texture_pos(1);	//4分割
 
 		/** 隠される面を除いたポリゴン作成 */
 		//ブロック位置を3次元連想配列に格納
@@ -176,7 +176,8 @@ class ShaderTextureMulti {
 		let num = Math.sqrt(split);	//1辺の数
 		let base = 1 / num;
 		let ret_list = [];
-		let s = 0.01;	//テクスチャとテクスチャの隙間
+	//	let s = 0.01;	//テクスチャとテクスチャの隙間
+		let s = 0;	//テクスチャとテクスチャの隙間
 		let rad = base / 2 - s;
 		for(let i = 0; i < num; i ++) {
 			for(let j = 0; j < num; j ++) {

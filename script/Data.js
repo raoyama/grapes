@@ -75,19 +75,16 @@ class Data {
 				*/
 			}
 		}
-
-		ret.push([0, 6, 0, 13]);
-		ret.push([0, 5, 1, 13]);
-		ret.push([0, 4, 2, 13]);
-		ret.push([0, 3, 3, 13]);
-		ret.push([0, 2, 4, 13]);
-		ret.push([0, 1, 5, 13]);
-		
+		ret.push([0, 6, 0, 4]);
+		ret.push([0, 5, 1, 4]);
+		ret.push([0, 4, 2, 4]);
+		ret.push([0, 3, 3, 4]);
+		ret.push([0, 2, 4, 4]);
+		ret.push([0, 1, 5, 4]);
 		for(let i = 0; i < 300; i ++) {
 			
 			Data.makeTree(ret, Data.getRandomInt(num) , 0, Data.getRandomInt(num));
 		}
-		
 		
 		Data.makeGrape(ret, 70, 49, 0);
 		return ret;

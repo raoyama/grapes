@@ -121,7 +121,7 @@ class ShaderTextureBlock {
 		this.loc_textureCoord	= gl.getAttribLocation(this._prg, 'textureCoord');
 		this.loc_mvpMatrix		= gl.getUniformLocation(this._prg, 'mvpMatrix');
 		this.loc_texture		= gl.getUniformLocation(this._prg, 'texture');
-
+/*
 		GlCommon.create_texture(this._textures, 'texture/block1.png', 1);
 		GlCommon.create_texture(this._textures, 'texture/block2.png', 2);
 		GlCommon.create_texture(this._textures, 'texture/block3.png', 3);
@@ -132,6 +132,7 @@ class ShaderTextureBlock {
 		GlCommon.create_texture(this._textures, 'texture/block8.png', 8);
 		GlCommon.create_texture(this._textures, 'texture/block9.png', 9);
 		GlCommon.create_texture(this._textures, 'texture/block_test.png', 10);
+*/
 		GlCommon.create_texture(this._textures, 'texture/block15.png', 15);
 		GlCommon.create_texture(this._textures, 'texture/block16.png', 16);
 
